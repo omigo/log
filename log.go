@@ -105,13 +105,13 @@ func Errorf(format string, m ...interface{}) {
 	outputf(ErrorLevel, format, m...)
 }
 
-// Fatal is equivalent to Print() followed by a call to os.Exit(1).
+// Fatal is equivalent to Error() followed by a call to os.Exit(1).
 func Fatal(m ...interface{}) {
 	output(FatalLevel, m...)
 	os.Exit(1)
 }
 
-// Fatalf is equivalent to Printf() followed by a call to os.Exit(1).
+// Fatalf is equivalent to Errorf() followed by a call to os.Exit(1).
 func Fatalf(format string, m ...interface{}) {
 	outputf(FatalLevel, format, m...)
 	os.Exit(1)
