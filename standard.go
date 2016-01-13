@@ -58,8 +58,8 @@ func NewStandard(out io.Writer, flag int) *Standard {
 	return &Standard{out: out, flag: flag}
 }
 
-// SetOutput sets the output destination for the logger.
-func (s *Standard) SetOutput(w io.Writer) {
+// SetWriter sets the output destination for the logger.
+func (s *Standard) SetWriter(w io.Writer) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.out = w
@@ -72,13 +72,13 @@ func (s *Standard) SetFlags(flag int) {
 	s.flag = flag
 }
 
-// Output writes the output for a logging event.  The string s contains
+// Print writes the output for a logging event.  The string s contains
 // the text to print after the prefix specified by the flags of the
 // Logger.  A newline is appended if the last character of s is not
 // already a newline.  Calldepth is used to recover the PC and is
 // provided for generality, although at the moment on all pre-defined
 // paths it will be 3.
-func (s *Standard) Output(l Level, m string) error {
+func (s *Standard) Print(l Level, m string) error {
 	now := time.Now() // get this early.
 
 	var file string
@@ -113,7 +113,7 @@ func (s *Standard) formatHeader(buf []byte, t time.Time, l Level, file string, l
 		t = t.UTC()
 	}
 
-	tstr := t.Format("2006-01-02 15:04:05.999999")
+	tstr := t.Format("2006-01-02 15:04:05.000000")
 	if s.flag&Ldate != 0 {
 		buf = append(buf, tstr[:10]...)
 	}
