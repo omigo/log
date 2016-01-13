@@ -19,6 +19,26 @@ Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，�
 志，也可以改变日志输出位置，输出到数据库、消息队列等，者所有的改变都无需修改已经写好的项目源码。
 
 
+Usage
+-----
+
+安装：`go get -v -u github.com/gotips/log`
+
+使用：
+``` go
+package main
+
+import "github.com/gotips/log"
+
+func main() {
+	log.Debugf("%d %s", log.DebugLevel, log.DebugLevel)
+    log.Error("this is a error message")
+}
+```
+
+更多用法 [examples](https://github.com/omigo/log/blob/develop/examples/main.go)
+
+
 log/Printer/Standard
 --------------------
 
@@ -50,12 +70,20 @@ Golang 1.4 之前可以取到 goroutine ID(goid)，但之后就取不到了，�
 
 * 如果系统按功能模块划分，而不是按层次划分，可以定义一个 struct ，比如 Foo ，把 TID 作为它的
 一个属性，每个请求进入时，new 一个 struct ，传入 tid ，`Foo{tid}`，方法体内可以使用
+
 ``` go
 func (f *Foo)Bar(){
     log.Infof("%s %s", f.TID, "something")
 }
 ```
+
 如果也不想在打印日志时传递 tid，可以定义一个 log 实现 Logger2 ，组合到 Foo 中，Logger 就可
 以取到 tid 了，new Foo 时，也要 new Logger2 ，调用 `f.Infof("%s", "something")`。但这
 样需要实现所有的 Trace/Debug/Info/Warn/Error/Fatal[f] 方法，而且无法切换 log 实现了，除
 非改 Logger2 源码，这叫封装，就不是扩展了。不推荐这种极端做法！
+
+
+Others
+------
+
+最近更新请移步 https://github.com/omigo/log
