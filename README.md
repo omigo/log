@@ -31,12 +31,17 @@ package main
 import "github.com/gotips/log"
 
 func main() {
-	log.Debugf("%d %s", log.DebugLevel, log.DebugLevel)
+	log.Info("level = %s", log.DebugLevel)
     log.Error("this is a error message")
 }
 ```
+日志输出：
+```
+2016-01-13 11:39:29.055566 info examples/main.go:6 level = debug
+2016-01-13 11:39:29.055566 error examples/main.go:7 this is a error message
+```
 
-更多用法 [examples](https://github.com/omigo/log/blob/develop/examples/main.go)
+更多用法 [examples](examples/main.go)
 
 
 log/Printer/Standard
