@@ -37,17 +37,17 @@ func SetLevel(l Level) {
 	v = l
 }
 
-// std default logger
-var std Logger
+// std default output
+var std Printer
 
-// SetLogger change default logger
-func SetLogger(l Logger) {
-	std = l
+// SetOutput change default logger
+func SetPrinter(out Printer) {
+	std = out
 }
 
-// SetOutput change logger output file
-func SetOutput(w io.Writer) {
-	std.SetOutput(w)
+// SetWriter change logger output file
+func SetWriter(w io.Writer) {
+	std.SetWriter(w)
 }
 
 // SetFlags sets the output flags for the standard logger.
@@ -123,7 +123,7 @@ func output(l Level, m ...interface{}) {
 		return
 	}
 
-	std.Output(l, fmt.Sprint(m...))
+	std.Print(l, fmt.Sprint(m...))
 }
 
 func outputf(l Level, format string, m ...interface{}) {
@@ -132,5 +132,5 @@ func outputf(l Level, format string, m ...interface{}) {
 		return
 	}
 
-	std.Output(l, fmt.Sprintf(format, m...))
+	std.Print(l, fmt.Sprintf(format, m...))
 }
