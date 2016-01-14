@@ -13,7 +13,7 @@ Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，�
 
 虽然有那么多的 log 库，但都是大同小异，我们需要的也只是个标准的可以自定义级别的 log 库而已，就
 像 slf4j(Simple Logging Facade for Java) 一样，所以这个 log 库的需要完成得任务就是提供一
-个标准统一的接口，同时也提供了一个基本的实现。
+个标准统一的接口，同时也提供了一个基本的实现，可以设置自己编写模板，输出各种格式的日志。
 
 使用这个 log 库打印日志，可以随时切换日志级别，可以更换不同的 logger 实现，以打印不同格式的日
 志，也可以改变日志输出位置，输出到数据库、消息队列等，者所有的改变都无需修改已经写好的项目源码。
@@ -31,14 +31,23 @@ package main
 import "github.com/gotips/log"
 
 func main() {
-	log.Info("level = %s", log.DebugLevel)
-    log.Error("this is a error message")
+	// format = "2006-01-02 15:01:02.000000 info examples/main.go:88 message"
+	// log.SetFormat(format)
+	log.Errorf("this is a test message, %d", 1111)
+	log.Errorf("this is another test message, %d", 22222)
+
+	format = `{"date": "2006-01-02", "time": "15:04:05.999", "level": "info", "file": "log/main.go", "line":88, "log": "message"}`
+	log.SetFormat(format)
+	log.Errorf("this is a test message, %d", 1111)
+	log.Errorf("this is another test message, %d", 22222)
 }
 ```
 日志输出：
 ```
-2016-01-13 11:39:29.055566 info examples/main.go:6 level = debug
-2016-01-13 11:39:29.055566 error examples/main.go:7 this is a error message
+2016-01-14 18:51:43 error examples/main.go:16 this is a test message, 1111
+2016-01-14 18:51:43 error examples/main.go:17 this is another test message, 22222
+{"date": "2016-01-14", "time": "18:51:43.051", "level": "error", "file": "log/main.go", "line":41, "log": "this is a test message, 1111"}
+{"date": "2016-01-14", "time": "18:51:43.051", "level": "error", "file": "log/main.go", "line":42, "log": "this is another test message, 22222"}
 ```
 
 更多用法 [examples](examples/main.go)
@@ -86,6 +95,13 @@ func (f *Foo)Bar(){
 以取到 tid 了，new Foo 时，也要 new Logger2 ，调用 `f.Infof("%s", "something")`。但这
 样需要实现所有的 Trace/Debug/Info/Warn/Error/Fatal[f] 方法，而且无法切换 log 实现了，除
 非改 Logger2 源码，这叫封装，就不是扩展了。不推荐这种极端做法！
+
+TODO
+----
+
+* 目前还不支持各种格式的日期
+* 实现日志文件按一定规则自动滚动
+* 错误日志着色，开发阶段非常有用
 
 
 Others

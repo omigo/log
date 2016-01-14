@@ -7,7 +7,7 @@ import (
 )
 
 // Level log level type
-type Level int
+type Level uint8
 
 // levels enum
 const (
@@ -40,19 +40,19 @@ func SetLevel(l Level) {
 // std default output
 var std Printer
 
-// SetOutput change default logger
+// SetPrinter change default logger
 func SetPrinter(out Printer) {
 	std = out
 }
 
-// SetWriter change logger output file
-func SetWriter(w io.Writer) {
-	std.SetWriter(w)
+// ChangeWriter change logger output file
+func ChangeWriter(w io.Writer) {
+	std.ChangeWriter(w)
 }
 
-// SetFlags sets the output flags for the standard logger.
-func SetFlags(flag int) {
-	std.SetFlags(flag)
+// SetFormat sets the output format
+func SetFormat(format string) {
+	std.SetFormat(format)
 }
 
 // Trace log a message at the Trace level
