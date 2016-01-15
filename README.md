@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/omigo/log.svg?branch=develop)](https://travis-ci.org/omigo/log)
+
 log
 ===
 
@@ -13,7 +15,8 @@ Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，�
 
 虽然有那么多的 log 库，但都是大同小异，我们需要的也只是个标准的可以自定义级别的 log 库而已，就
 像 slf4j(Simple Logging Facade for Java) 一样，所以这个 log 库的需要完成得任务就是提供一
-个标准统一的接口，同时也提供了一个基本的实现，可以设置自己编写模板，输出各种格式的日志。
+个标准统一的接口，同时也提供了一个基本的实现，可以自己定义模板格式，输出各种类型的日志，如
+csv/json/xml。
 
 使用这个 log 库打印日志，可以随时切换日志级别，可以更换不同的 logger 实现，以打印不同格式的日
 志，也可以改变日志输出位置，输出到数据库、消息队列等，者所有的改变都无需修改已经写好的项目源码。
@@ -103,6 +106,7 @@ func (f *Foo)Bar(){
 TODO
 ----
 
+* Benchmark Test
 * 目前还不支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动
