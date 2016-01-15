@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/omigo/log.svg?branch=develop)](https://travis-ci.org/omigo/log)
+[![Build Status](https://travis-ci.org/gotips/log.svg?branch=develop)](https://travis-ci.org/gotips/log)
 
 log
 ===
