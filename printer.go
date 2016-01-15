@@ -8,16 +8,16 @@ import (
 // Printer defined print adaptor
 type Printer interface {
 
-	// SetWriter sets the output destination for the logger.
-	SetWriter(w io.Writer)
+	// ChangeWriter sets the output destination for the printer.
+	ChangeWriter(w io.Writer)
 
-	// SetFlags sets the output flags for the logger.
-	SetFlags(flag int)
+	// SetFormat set output format for the printer
+	SetFormat(format string)
 
 	// Output writes the output for a logging event.
 	Print(l Level, m string) error
 }
 
 func init() {
-	SetPrinter(NewStandard(os.Stdout, LStdFlags))
+	SetPrinter(NewStandard(os.Stdout, DefaultFormat))
 }
