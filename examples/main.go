@@ -1,50 +1,39 @@
 package main
 
-import "github.com/gotips/log"
+import (
+	"fmt"
+
+	"github.com/gotips/log"
+)
 
 func main() {
 	log.Error("level = debug")
-	log.Tracef("%d %s", log.AllLevel, log.AllLevel)
-	log.Tracef("%d %s", log.TraceLevel, log.TraceLevel)
-	log.Debugf("%d %s", log.DebugLevel, log.DebugLevel)
-	log.Infof("%d %s", log.InfoLevel, log.InfoLevel)
-	log.Warnf("%d %s", log.WarnLevel, log.WarnLevel)
-	log.Errorf("%d %s", log.ErrorLevel, log.ErrorLevel)
+	log.Infof("this is a test message, %d", 1111)
+	log.Errorf("this is another test message, %d", 22222)
 	// Fatalf("%d %s", log.FatalLevel, log.FatalLevel)
-	log.Error("----------------")
 
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-
-	log.Error("----------------")
-	format := "2006-01-02 15:04:05.999 info /go/src/github.com/gotips/log/examples/main.go:88 message"
+	format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-1-2", "3:4:05.9",
+		log.LevelToken, log.PathToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-	log.Error("----------------")
+	log.Infof("this is a test message, %d", 1111)
 
-	log.Error("----------------")
-	format = "2006-01-02 15:01:02.999999 info github.com/gotips/log/examples/main.go:88 message"
+	format = fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02", "15:04:05.999999",
+		log.LevelToken, log.PackageToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-	log.Error("----------------")
+	log.Infof("this is a test message, %d", 1111)
 
-	format = "2006-01-02 15:01:02.000000 info examples/main.go:88 message"
+	format = fmt.Sprintf("%s %s %s:%d %s", "2006-01-02 15:04:05.000000",
+		log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-	log.Error("----------------")
+	log.Infof("this is a test message, %d", 1111)
 
-	format = `{"date": "2006-01-02", "time": "15:04:05.999", "level": "info", "file": "log/main.go", "line":88, "log": "message"}`
+	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
+		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-	log.Error("----------------")
+	log.Infof("this is a test message, %d", 1111)
 
-	format = `<log><date>2006-01-02</date><time>15:04:05.999</time><level>info</level><file>log/main.go</file><line>88</line><msg>message</msg><log>`
+	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
+		"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-	log.Error("----------------")
+	log.Infof("this is a test message, %d", 1111)
 }

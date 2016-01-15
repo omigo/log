@@ -31,23 +31,27 @@ package main
 import "github.com/gotips/log"
 
 func main() {
-	// format = "2006-01-02 15:01:02.000000 info examples/main.go:88 message"
-	// log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
-
-	format = `{"date": "2006-01-02", "time": "15:04:05.999", "level": "info", "file": "log/main.go", "line":88, "log": "message"}`
+    format = fmt.Sprintf("%s %s %s:%d %s", "2006-01-02 15:04:05.000000",
+		log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
-	log.Errorf("this is a test message, %d", 1111)
-	log.Errorf("this is another test message, %d", 22222)
+	log.Infof("this is a test message, %d", 1111)
+
+	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
+		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+	log.SetFormat(format)
+	log.Infof("this is a test message, %d", 1111)
+
+	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
+		"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+	log.SetFormat(format)
+	log.Infof("this is a test message, %d", 1111)
 }
 ```
 日志输出：
 ```
-2016-01-14 18:51:43 error examples/main.go:16 this is a test message, 1111
-2016-01-14 18:51:43 error examples/main.go:17 this is another test message, 22222
-{"date": "2016-01-14", "time": "18:51:43.051", "level": "error", "file": "log/main.go", "line":41, "log": "this is a test message, 1111"}
-{"date": "2016-01-14", "time": "18:51:43.051", "level": "error", "file": "log/main.go", "line":42, "log": "this is another test message, 22222"}
+2016-01-15 11:40:03.54123 info github.com/gotips/log/examples/main.go:24 this is a test message, 1111
+{"date": "2016-01-15", "time": "11:40:03.541", "level": "info", "file": "examples/main.go", "line": 36, "log": "this is a test message, 1111"}
+<log><date>2016-01-15</date><time>11:40:03.541</time><level>info</level><file>examples/main.go</file><line>42</line><msg>this is a test message, 1111</msg><log>
 ```
 
 更多用法 [examples](examples/main.go)
@@ -100,6 +104,7 @@ TODO
 ----
 
 * 目前还不支持各种格式的日期
+* 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动
 * 错误日志着色，开发阶段非常有用
 

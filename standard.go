@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -21,10 +22,18 @@ type record struct {
 // DefaultFormat 默认日志格式
 const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
 
-// A Standard Logger represents an active logging object that generates lines of
-// output to an io.Writer.  Each logging operation makes a single call to
-// the Writer's Write method.  A Logger can be used simultaneously from
-// multiple goroutines; it guarantees to serialize access to the Writer.
+// format tokens, 和 日期、时间组成日志格式
+const (
+	LevelToken   string = "info"
+	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
+	PackageToken        = "github.com/gotips/log/examples/main.go"
+	ProjectToken        = "examples/main.go"
+	FileToken           = "main.go"
+	LineToken    int    = 88
+	MessageToken string = "message"
+)
+
+// Standard 日志输出基本实现
 type Standard struct {
 	mu  sync.Mutex // ensures atomic writes; protects the following fields
 	out io.Writer  // destination for output
@@ -55,16 +64,6 @@ func (s *Standard) ChangeWriter(w io.Writer) {
 	s.out = w
 }
 
-var tokens = [...]string{
-	"info", "{{ .Level }}",
-	"/go/src/github.com/gotips/log/examples/main.go", "{{ .File }}",
-	"github.com/gotips/log/examples/main.go", "{{ .File}}",
-	"examples/main.go", "{{ .File}}",
-	"main.go", "{{ .File }}",
-	"88", "{{ .Line }}",
-	"message", "{{ .Message }}",
-}
-
 // SetFormat set output format for the printer
 func (s *Standard) SetFormat(format string) {
 	s.mu.Lock()
@@ -80,9 +79,13 @@ func (s *Standard) SetFormat(format string) {
 	// 提取出日期和时间的格式化模式字符串
 	s.dateFmt, s.timeFmt = extactDateTimeFormat(format)
 
-	for i, l := 0, len(tokens); i < l; i += 2 {
-		s.pattern = strings.Replace(s.pattern, tokens[i], tokens[i+1], -1)
-	}
+	s.pattern = strings.Replace(s.pattern, LevelToken, "{{ .Level }}", -1)
+	s.pattern = strings.Replace(s.pattern, PathToken, "{{ .File }}", -1)
+	s.pattern = strings.Replace(s.pattern, PackageToken, "{{ .File }}", -1)
+	s.pattern = strings.Replace(s.pattern, ProjectToken, "{{ .File }}", -1)
+	s.pattern = strings.Replace(s.pattern, FileToken, "{{ .File }}", -1)
+	s.pattern = strings.Replace(s.pattern, strconv.Itoa(LineToken), "{{ .Line }}", -1)
+	s.pattern = strings.Replace(s.pattern, MessageToken, "{{ .Message }}", -1)
 
 	// println(s.dateFmt, s.timeFmt)
 
@@ -138,19 +141,21 @@ func extactDateTimeFormat(format string) (dateFmt, timeFmt string) {
 	// 如果有三处以上不同，说明格式配置错误
 	// TODO 有 bug，比如日期格式如果配置成 2006-1-2，那么两个串长度不等
 
-	t, _ := time.ParseInLocation("2006-01-02 15:04:05.999999999", "1991-12-11 21:11:11.111111111", time.Local)
+	t, _ := time.ParseInLocation("2006-1-2 3:4:5.000000000", "1991-2-1 1:1:1.111111111", time.Local)
 	contrast := t.Format(format)
 
+	// println(format)
 	// println(contrast)
 
 	idxs := [10]int{}
 	start := -1
 	for i, l, same := 0, len(format), true; i < l; i++ {
 		if start > 4 {
-			panic(fmt.Sprintf("format string error at %s", format[i-1:]))
+			panic(fmt.Sprintf("format string error at `%s`", format[i-1:]))
 		}
 
-		// fmt.Printf("%c %c %d %d\n", format[i], contrast[j], idxs, start)
+		// fmt.Printf("%c %c %d %d\n", format[i], contrast[i], idxs, start)
+
 		if format[i] != contrast[i] {
 			if same {
 				start++
@@ -168,6 +173,10 @@ func extactDateTimeFormat(format string) (dateFmt, timeFmt string) {
 
 		// 如果是 空格、-、:、. ，那么它不一定是结束位置
 		if format[i] == '-' || format[i] == ' ' || format[i] == ':' || format[i] == '.' {
+			// 如果这些字符后面是 0（如 2006-01-02），跳过 0
+			if i+1 < l && format[i+1] == '0' && contrast[i+1] == '0' {
+				i++
+			}
 			continue
 		}
 
@@ -190,27 +199,28 @@ func extactDateTimeFormat(format string) (dateFmt, timeFmt string) {
 	return dateFmt, timeFmt
 }
 
-func calculatePrefixLen(format string, skip int) (prefixLen int) {
+func calculatePrefixLen(format string, skip int) int {
+	// 格式中不包含文件路径
 	if !strings.Contains(format, "main.go") {
-		prefixLen = -1
-		return prefixLen
+		return -1
 	}
 
 	_, file, _, _ := runtime.Caller(skip)
 
-	if strings.Contains(format, tokens[2]) {
-		// file with absolute path
-		prefixLen = 0
+	// file with absolute path
+	if strings.Contains(format, PathToken) {
+		return 0
+	}
 
-	} else if strings.Contains(format, tokens[4]) {
-		// file with package name
-		prefixLen = strings.Index(file, "/src/") + 5
+	// file with package name
+	if strings.Contains(format, PackageToken) {
+		return strings.Index(file, "/src/") + 5
+	}
 
-	} else if strings.Contains(format, tokens[6]) {
-		// file with project path
+	// file with project path
+	if strings.Contains(format, ProjectToken) {
 		// remove /<GOPATH>/src/
-
-		prefixLen = strings.Index(file, "/src/") + 5
+		prefixLen := strings.Index(file, "/src/") + 5
 		file = file[prefixLen:]
 
 		// remove github.com/
@@ -230,10 +240,13 @@ func calculatePrefixLen(format string, skip int) (prefixLen int) {
 			}
 		}
 
-	} else if strings.Contains(format, tokens[8]) {
-		// file only
-		prefixLen = strings.LastIndex(file, "/") + 1
+		return prefixLen
 	}
 
-	return prefixLen
+	// file only
+	if strings.Contains(format, FileToken) {
+		return strings.LastIndex(file, "/") + 1
+	}
+
+	return -1
 }
