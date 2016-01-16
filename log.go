@@ -2,21 +2,21 @@ package log
 
 import "io"
 
-// Level log level type
+// Level 日志级别
 type Level uint8
 
-// levels enum
+// 所有日志级别常量，级别越高，日志越重要，级别越低，日志越详细
 const (
-	AllLevel Level = iota
+	AllLevel Level = iota // 等同于 TraceLevel
 	TraceLevel
 	DebugLevel
 	InfoLevel
 	WarnLevel
 	ErrorLevel
-	PanicLevel
-	FatalLevel
-	PrintLevel
-	StackLevel
+	PanicLevel // panic 应该是最高级别日志了，答应错误栈，但是可以 recover
+	FatalLevel // fatal 表明严重错误，程序直接退出，慎用
+	PrintLevel // 提供这个级别日志，方便无论何种情况下，都打印必要信息，比如服务启动信息
+	StackLevel // 必要时打印堆栈信息
 )
 
 // Labels level label
@@ -45,6 +45,17 @@ func ChangeWriter(w io.Writer) { std.ChangeWriter(w) }
 
 // SetFormat sets the output format
 func SetFormat(format string) { std.SetFormat(format) }
+
+// is log enabled
+func IsTraceEnabled() bool { return v <= TraceLevel }
+func IsDebugEnabled() bool { return v <= DebugLevel }
+func IsInfoEnabled() bool  { return v <= InfoLevel }
+func IsWarnEnabled() bool  { return v <= WarnLevel }
+func IsErrorEnabled() bool { return v <= ErrorLevel }
+func IsPanicEnabled() bool { return v <= PanicLevel }
+func IsFatalEnabled() bool { return v <= FatalLevel }
+func IsPrintEnabled() bool { return v <= PrintLevel }
+func IsStackEnabled() bool { return v <= StackLevel }
 
 // log
 func Trace(m ...interface{}) { std.Tprintf(v, TraceLevel, "", "", m...) }

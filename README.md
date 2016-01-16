@@ -110,7 +110,6 @@ func (f *Foo)Bar(){
 TODO
 ----
 
-* Enabled 方法
 * Benchmark Test
 * 目前还不支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
