@@ -107,23 +107,37 @@ func Tstackf(tid string, format string, m ...interface{}) {
 // ======== 兼容 wothing/log ===============
 
 // log with traceID
-func TraceT(tid string, m ...interface{}) { Ttrace(tid, m...) }
-func DebugT(tid string, m ...interface{}) { Tdebug(tid, m...) }
-func InfoT(tid string, m ...interface{})  { Tinfo(tid, m...) }
-func WarnT(tid string, m ...interface{})  { Twarn(tid, m...) }
-func ErrorT(tid string, m ...interface{}) { Terror(tid, m...) }
-func PanicT(tid string, m ...interface{}) { Tpanic(tid, m...) }
-func FatalT(tid string, m ...interface{}) { Tfatal(tid, m...) }
-func PrintT(tid string, m ...interface{}) { Tprint(tid, m...) }
-func StackT(tid string, m ...interface{}) { Tstack(tid, m...) }
+func TraceT(tid string, m ...interface{}) { std.Tprintf(v, TraceLevel, tid, "", m...) }
+func DebugT(tid string, m ...interface{}) { std.Tprintf(v, DebugLevel, tid, "", m...) }
+func InfoT(tid string, m ...interface{})  { std.Tprintf(v, InfoLevel, tid, "", m...) }
+func WarnT(tid string, m ...interface{})  { std.Tprintf(v, WarnLevel, tid, "", m...) }
+func ErrorT(tid string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tid, "", m...) }
+func PanicT(tid string, m ...interface{}) { std.Tprintf(v, PanicLevel, tid, "", m...) }
+func FatalT(tid string, m ...interface{}) { std.Tprintf(v, FatalLevel, tid, "", m...) }
+func PrintT(tid string, m ...interface{}) { std.Tprintf(v, PrintLevel, tid, "", m...) }
+func StackT(tid string, m ...interface{}) { std.Tprintf(v, StackLevel, tid, "", m...) }
 
 // log with traceID and format
-func TracefT(tid string, format string, m ...interface{}) { Ttracef(tid, format, m...) }
-func DebugfT(tid string, format string, m ...interface{}) { Tdebugf(tid, format, m...) }
-func InfofT(tid string, format string, m ...interface{})  { Tinfof(tid, format, m...) }
-func WarnfT(tid string, format string, m ...interface{})  { Twarnf(tid, format, m...) }
-func ErrorfT(tid string, format string, m ...interface{}) { Terrorf(tid, format, m...) }
-func PanicfT(tid string, format string, m ...interface{}) { Tpanicf(tid, format, m...) }
-func FatalfT(tid string, format string, m ...interface{}) { Tfatalf(tid, format, m...) }
-func PrintfT(tid string, format string, m ...interface{}) { Tprintf(tid, format, m...) }
-func StackfT(tid string, format string, m ...interface{}) { Tstackf(tid, format, m...) }
+func TracefT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, TraceLevel, tid, format, m...)
+}
+func DebugfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, DebugLevel, tid, format, m...)
+}
+func InfofT(tid string, format string, m ...interface{}) { std.Tprintf(v, InfoLevel, tid, format, m...) }
+func WarnfT(tid string, format string, m ...interface{}) { std.Tprintf(v, WarnLevel, tid, format, m...) }
+func ErrorfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, ErrorLevel, tid, format, m...)
+}
+func PanicfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, PanicLevel, tid, format, m...)
+}
+func FatalfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, FatalLevel, tid, format, m...)
+}
+func PrintfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, PrintLevel, tid, format, m...)
+}
+func StackfT(tid string, format string, m ...interface{}) {
+	std.Tprintf(v, StackLevel, tid, format, m...)
+}
