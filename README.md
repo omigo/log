@@ -98,7 +98,7 @@ Golang 1.4 之前可以取到 goroutine ID(goid)，但之后就取不到了，�
 
 ``` go
 func (f *Foo)Bar(){
-    log.Infof("%s %s", f.TID, "something")
+    log.Tinfof( f.TID, "get %s", "something")
 }
 ```
 
@@ -110,8 +110,9 @@ func (f *Foo)Bar(){
 TODO
 ----
 
+* examples and comments
 * Benchmark Test
-* 目前还不支持各种格式的日期
+* 测试是否支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动
 * 错误日志着色，开发阶段非常有用

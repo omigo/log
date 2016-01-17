@@ -9,7 +9,7 @@ type Level uint8
 const (
 	AllLevel Level = iota // 等同于 TraceLevel
 	TraceLevel
-	DebugLevel
+	DebugLevel // 默认日志级别，方便开发
 	InfoLevel
 	WarnLevel
 	ErrorLevel
