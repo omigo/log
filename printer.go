@@ -5,19 +5,17 @@ import (
 	"os"
 )
 
-// Printer defined print adaptor
+func init() {
+	SetPrinter(NewStandard(os.Stdout, DefaultFormat))
+}
+
+// Printer defined print interface
 type Printer interface {
-
-	// ChangeWriter sets the output destination for the printer.
-	ChangeWriter(w io.Writer)
-
 	// SetFormat set output format for the printer
 	SetFormat(format string)
 
-	// Output writes the output for a logging event.
-	Print(l Level, m string) error
-}
+	Tprintf(v, l Level, tid string, format string, m ...interface{})
 
-func init() {
-	SetPrinter(NewStandard(os.Stdout, DefaultFormat))
+	// ChangeWriter sets the output destination for the printer.
+	ChangeWriter(w io.Writer)
 }
