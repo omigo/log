@@ -2,12 +2,31 @@ package log
 
 import "io"
 
+// 可以用这些串和日期、时间（包含毫秒数）任意组合，拼成各种格式的日志，如 csv/json/xml
+const (
+	LevelToken   string = "info"
+	TagToken            = "tag"
+	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
+	PackageToken        = "github.com/gotips/log/examples/main.go"
+	ProjectToken        = "examples/main.go"
+	FileToken           = "main.go"
+	LineToken    int    = 88
+	MessageToken string = "message"
+)
+
+// DefaultFormat 默认日志格式
+const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
+
+// DefaultFormatTag 默认日志格式带标签
+const DefaultFormatTag = "2006-01-02 15:04:05 tag info examples/main.go:88 message"
+
 // Level 日志级别
 type Level uint8
 
 // 所有日志级别常量，级别越高，日志越重要，级别越低，日志越详细
 const (
 	AllLevel Level = iota // 等同于 TraceLevel
+
 	TraceLevel
 	DebugLevel // 默认日志级别，方便开发
 	InfoLevel
@@ -45,8 +64,8 @@ func SetPrinter(p Printer) { std = p }
 // ChangeWriter 改变输出位置，通过这个接口，可以实现日志文件按时间或按大小滚动
 func ChangeWriter(w io.Writer) { std.ChangeWriter(w) }
 
-// SetFormat 设置日志输出格式
-func SetFormat(format string) { std.SetFormat(format) }
+// ChangeFormat 改变日志格式
+func ChangeFormat(format string) { std.ChangeFormat(format) }
 
 // 判断各种级别的日志是否会被输出
 func IsTraceEnabled() bool { return v <= TraceLevel }

@@ -28,10 +28,10 @@ func TestChangeWriter(t *testing.T) {
 	}
 }
 
-func TestSetFormat(t *testing.T) {
+func TestChangeFormat(t *testing.T) {
 	format := fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
 		"2006-01-02", "15:04:05.000", LevelToken, ProjectToken, LineToken, MessageToken)
-	SetFormat(format)
+	ChangeFormat(format)
 
 	buf := bytes.NewBuffer(make([]byte, 4096))
 	ChangeWriter(buf)
@@ -99,7 +99,7 @@ func TestFormatLog(t *testing.T) {
 
 func TestNormalLogWithTraceID(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
+	ChangeFormat(format)
 	SetLevel(AllLevel)
 
 	Ttrace(uuid, AllLevel)
@@ -123,7 +123,7 @@ func TestNormalLogWithTraceID(t *testing.T) {
 
 func TestFormatLogWithTraceID(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
+	ChangeFormat(format)
 	SetLevel(AllLevel)
 
 	Ttracef(uuid, "%d %s", AllLevel, AllLevel)
@@ -147,7 +147,7 @@ func TestFormatLogWithTraceID(t *testing.T) {
 
 func TestWothingNormalLogWithTraceID(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
+	ChangeFormat(format)
 	SetLevel(AllLevel)
 
 	TraceT(uuid, AllLevel)
@@ -171,7 +171,7 @@ func TestWothingNormalLogWithTraceID(t *testing.T) {
 
 func TestWothingFormatLogWithTraceID(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
+	ChangeFormat(format)
 	SetLevel(AllLevel)
 
 	TracefT(uuid, "%d %s", AllLevel, AllLevel)
