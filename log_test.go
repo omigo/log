@@ -1,16 +1,56 @@
 package log
 
-import "testing"
+import (
+	"bytes"
+	"fmt"
+	"testing"
+	"time"
+)
+
+const uuid = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+
+func TestLogLevel(t *testing.T) {
+	SetLevel(InfoLevel)
+	if IsDebugEnabled() || !IsInfoEnabled() || !IsWarnEnabled() {
+		t.FailNow()
+	}
+	SetLevel(DebugLevel) // 恢复现场，避免影响其他单元测试
+}
+
+func TestChangeWriter(t *testing.T) {
+	buf := bytes.NewBuffer(make([]byte, 4096))
+	ChangeWriter(buf)
+
+	rand := time.Now().String()
+	Info(rand)
+	if !bytes.Contains(buf.Bytes(), ([]byte)(rand)) {
+		t.FailNow()
+	}
+}
 
 func TestSetFormat(t *testing.T) {
-	format := "2006-01-02 15:04:05.999999999 info log/main.go:88 message"
+	format := fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
+		"2006-01-02", "15:04:05.000", LevelToken, ProjectToken, LineToken, MessageToken)
 	SetFormat(format)
 
-	Errorf("%s %s", "6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test long long long long message")
+	buf := bytes.NewBuffer(make([]byte, 4096))
+	ChangeWriter(buf)
+
+	rand := time.Now().String()
+	Debug(rand)
+	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<log><date>")) &&
+		!bytes.HasSuffix(buf.Bytes(), ([]byte)("</msg><log>")) {
+		t.FailNow()
+	}
 }
 
 func TestPanicLog(t *testing.T) {
-	panic("test")
+	defer func() {
+		if err := recover(); err == nil {
+			t.Fail()
+		}
+	}()
+	Panic("test panic")
 }
 
 func TestNormalLog(t *testing.T) {
@@ -24,8 +64,8 @@ func TestNormalLog(t *testing.T) {
 	Error(ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// fmt.Println("panic recover")
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
 		Panic(PanicLevel)
@@ -46,8 +86,8 @@ func TestFormatLog(t *testing.T) {
 	Errorf("%d %s", ErrorLevel, ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// do nothing
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
 		Panicf("%d %s", PanicLevel, PanicLevel)
@@ -58,97 +98,97 @@ func TestFormatLog(t *testing.T) {
 }
 
 func TestNormalLogWithTraceID(t *testing.T) {
-	format := "2006-01-02 15:04:05 tid info examples/main.go:88 message"
+	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
 	SetLevel(AllLevel)
 
-	Ttrace("6ba7b814-9dad-11d1-80b4-00c04fd430c8", AllLevel)
-	Ttrace("6ba7b814-9dad-11d1-80b4-00c04fd430c8", TraceLevel)
-	Tdebug("6ba7b814-9dad-11d1-80b4-00c04fd430c8", DebugLevel)
-	Tinfo("6ba7b814-9dad-11d1-80b4-00c04fd430c8", InfoLevel)
-	Twarn("6ba7b814-9dad-11d1-80b4-00c04fd430c8", WarnLevel)
-	Terror("6ba7b814-9dad-11d1-80b4-00c04fd430c8", ErrorLevel)
+	Ttrace(uuid, AllLevel)
+	Ttrace(uuid, TraceLevel)
+	Tdebug(uuid, DebugLevel)
+	Tinfo(uuid, InfoLevel)
+	Twarn(uuid, WarnLevel)
+	Terror(uuid, ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// do nothing
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
-		Tpanic("6ba7b814-9dad-11d1-80b4-00c04fd430c8", PanicLevel)
+		Tpanic(uuid, PanicLevel)
 	}()
-	// Tfatal("6ba7b814-9dad-11d1-80b4-00c04fd430c8", FatalLevel)
-	Tprint("6ba7b814-9dad-11d1-80b4-00c04fd430c8", PrintLevel)
-	Tstack("6ba7b814-9dad-11d1-80b4-00c04fd430c8", StackLevel)
+	// Tfatal(uuid, FatalLevel)
+	Tprint(uuid, PrintLevel)
+	Tstack(uuid, StackLevel)
 }
 
 func TestFormatLogWithTraceID(t *testing.T) {
-	format := "2006-01-02 15:04:05 tid info examples/main.go:88 message"
+	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
 	SetLevel(AllLevel)
 
-	Ttracef("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", AllLevel, AllLevel)
-	Ttracef("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", TraceLevel, TraceLevel)
-	Tdebugf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", DebugLevel, DebugLevel)
-	Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", InfoLevel, InfoLevel)
-	Twarnf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", WarnLevel, WarnLevel)
-	Terrorf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", ErrorLevel, ErrorLevel)
+	Ttracef(uuid, "%d %s", AllLevel, AllLevel)
+	Ttracef(uuid, "%d %s", TraceLevel, TraceLevel)
+	Tdebugf(uuid, "%d %s", DebugLevel, DebugLevel)
+	Tinfof(uuid, "%d %s", InfoLevel, InfoLevel)
+	Twarnf(uuid, "%d %s", WarnLevel, WarnLevel)
+	Terrorf(uuid, "%d %s", ErrorLevel, ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// do nothing
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
-		Tpanicf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", PanicLevel, PanicLevel)
+		Tpanicf(uuid, "%d %s", PanicLevel, PanicLevel)
 	}()
-	// Tfatalf("6ba7b814-9dad-11d1-80b4-00c04fd430c8","%d %s", FatalLevel, FatalLevel)
-	Tprintf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", PrintLevel, PrintLevel)
-	Tstackf("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", StackLevel, StackLevel)
+	// Tfatalf(uuid,"%d %s", FatalLevel, FatalLevel)
+	Tprintf(uuid, "%d %s", PrintLevel, PrintLevel)
+	Tstackf(uuid, "%d %s", StackLevel, StackLevel)
 }
 
 func TestWothingNormalLogWithTraceID(t *testing.T) {
-	format := "2006-01-02 15:04:05 tid info examples/main.go:88 message"
+	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
 	SetLevel(AllLevel)
 
-	TraceT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", AllLevel)
-	TraceT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", TraceLevel)
-	DebugT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", DebugLevel)
-	InfoT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", InfoLevel)
-	WarnT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", WarnLevel)
-	ErrorT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", ErrorLevel)
+	TraceT(uuid, AllLevel)
+	TraceT(uuid, TraceLevel)
+	DebugT(uuid, DebugLevel)
+	InfoT(uuid, InfoLevel)
+	WarnT(uuid, WarnLevel)
+	ErrorT(uuid, ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// do nothing
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
-		PanicT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", PanicLevel)
+		PanicT(uuid, PanicLevel)
 	}()
-	// FatalT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", FatalLevel)
-	PrintT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", PrintLevel)
-	StackT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", StackLevel)
+	// FatalT(uuid, FatalLevel)
+	PrintT(uuid, PrintLevel)
+	StackT(uuid, StackLevel)
 }
 
 func TestWothingFormatLogWithTraceID(t *testing.T) {
-	format := "2006-01-02 15:04:05 tid info examples/main.go:88 message"
+	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
 	SetLevel(AllLevel)
 
-	TracefT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", AllLevel, AllLevel)
-	TracefT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", TraceLevel, TraceLevel)
-	DebugfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", DebugLevel, DebugLevel)
-	InfofT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", InfoLevel, InfoLevel)
-	WarnfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", WarnLevel, WarnLevel)
-	ErrorfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", ErrorLevel, ErrorLevel)
+	TracefT(uuid, "%d %s", AllLevel, AllLevel)
+	TracefT(uuid, "%d %s", TraceLevel, TraceLevel)
+	DebugfT(uuid, "%d %s", DebugLevel, DebugLevel)
+	InfofT(uuid, "%d %s", InfoLevel, InfoLevel)
+	WarnfT(uuid, "%d %s", WarnLevel, WarnLevel)
+	ErrorfT(uuid, "%d %s", ErrorLevel, ErrorLevel)
 	func() {
 		defer func() {
-			if err := recover(); err != nil {
-				// do nothing
+			if err := recover(); err == nil {
+				t.Fail()
 			}
 		}()
-		PanicfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", PanicLevel, PanicLevel)
+		PanicfT(uuid, "%d %s", PanicLevel, PanicLevel)
 	}()
-	// FatalfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8","%d %s", FatalLevel, FatalLevel)
-	PrintfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", PrintLevel, PrintLevel)
-	StackfT("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "%d %s", StackLevel, StackLevel)
+	// FatalfT(uuid,"%d %s", FatalLevel, FatalLevel)
+	PrintfT(uuid, "%d %s", PrintLevel, PrintLevel)
+	StackfT(uuid, "%d %s", StackLevel, StackLevel)
 }

@@ -12,10 +12,11 @@ import (
 	"time"
 )
 
+// 这些 Token 是否应该放到 log.go 文件中？
 // 可以用这些串和日期、时间（包含毫秒数）任意组合，拼成各种格式的日志，如 csv/json/xml
 const (
 	LevelToken   string = "info"
-	TraceIDToken        = "tid"
+	TagToken            = "tag"
 	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
 	PackageToken        = "github.com/gotips/log/examples/main.go"
 	ProjectToken        = "examples/main.go"
@@ -26,6 +27,16 @@ const (
 
 // DefaultFormat 默认日志格式
 const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
+
+type record struct {
+	Date, Time string
+	TraceID    string
+	Level      string
+	File       string
+	Line       int
+	Message    string
+	Stack      []byte
+}
 
 // Standard 日志输出基本实现
 type Standard struct {
@@ -40,25 +51,21 @@ type Standard struct {
 	timeFmt   string
 }
 
-// NewStandard creates a new Logger.   The out variable sets the
-// destination to which log data will be written.
-// The prefix appears at the beginning of each generated log line.
-// The flag argument defines the logging properties.
+// NewStandard 返回标准实现
 func NewStandard(out io.Writer, format string) *Standard {
 	std := &Standard{out: out}
 	std.SetFormat(format)
-
 	return std
 }
 
-// ChangeWriter sets the output destination for the logger.
+// ChangeWriter 改变输出流
 func (s *Standard) ChangeWriter(w io.Writer) {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 	s.out = w
+	s.mu.Unlock()
 }
 
-// SetFormat set output format for the printer
+// SetFormat 设置日志格式
 func (s *Standard) SetFormat(format string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -75,7 +82,7 @@ func (s *Standard) SetFormat(format string) {
 	s.pattern = strings.Replace(s.pattern, PackageToken, "{{ .File }}", -1)
 	s.pattern = strings.Replace(s.pattern, ProjectToken, "{{ .File }}", -1)
 	s.pattern = strings.Replace(s.pattern, FileToken, "{{ .File }}", -1)
-	s.pattern = strings.Replace(s.pattern, TraceIDToken, "{{ .TraceID }}", -1)
+	s.pattern = strings.Replace(s.pattern, TagToken, "{{ .TraceID }}", -1)
 	s.pattern = strings.Replace(s.pattern, LevelToken, "{{ .Level }}", -1)
 	s.pattern = strings.Replace(s.pattern, strconv.Itoa(LineToken), "{{ .Line }}", -1)
 	s.pattern = strings.Replace(s.pattern, MessageToken, "{{ .Message }}", -1)
@@ -94,28 +101,18 @@ func (s *Standard) SetFormat(format string) {
 	s.tpl = template.Must(template.New("record").Parse(s.pattern))
 }
 
-type record struct {
-	Date, Time string
-	TraceID    string
-	Level      string
-	File       string
-	Line       int
-	Message    string
-	Stack      []byte
-}
-
 // Tprintf 打印日志
-func (s *Standard) Tprintf(v, l Level, tid string, format string, m ...interface{}) {
+func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface{}) {
 	if v > l {
 		return
 	}
 
-	if tid == "" {
-		tid = "-"
+	if tag == "" {
+		tag = "-"
 	}
 	r := record{
 		Level:   l.String(),
-		TraceID: tid,
+		TraceID: tag,
 	}
 
 	if format == "" {

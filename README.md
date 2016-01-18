@@ -110,8 +110,9 @@ func (f *Foo)Bar(){
 TODO
 ----
 
-* examples and comments
+* examples
 * Benchmark Test
+* 把 SetFormat 和 ChangeWriter 方法提出 printer 之外，放到 log.go 中
 * 测试是否支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动
