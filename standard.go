@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"io"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -11,20 +12,10 @@ import (
 	"time"
 )
 
-type record struct {
-	Date, Time string
-	Level      string
-	File       string
-	Line       int
-	Message    string
-}
-
-// DefaultFormat 默认日志格式
-const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
-
-// format tokens, 和 日期、时间组成日志格式
+// 可以用这些串和日期、时间（包含毫秒数）任意组合，拼成各种格式的日志，如 csv/json/xml
 const (
 	LevelToken   string = "info"
+	TraceIDToken        = "tid"
 	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
 	PackageToken        = "github.com/gotips/log/examples/main.go"
 	ProjectToken        = "examples/main.go"
@@ -32,6 +23,9 @@ const (
 	LineToken    int    = 88
 	MessageToken string = "message"
 )
+
+// DefaultFormat 默认日志格式
+const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
 
 // Standard 日志输出基本实现
 type Standard struct {
@@ -76,36 +70,60 @@ func (s *Standard) SetFormat(format string) {
 
 	s.prefixLen = calculatePrefixLen(format, 3)
 
-	// 提取出日期和时间的格式化模式字符串
-	s.dateFmt, s.timeFmt = extactDateTimeFormat(format)
-
-	s.pattern = strings.Replace(s.pattern, LevelToken, "{{ .Level }}", -1)
+	// 顺序最好不要变，从最长的开始匹配
 	s.pattern = strings.Replace(s.pattern, PathToken, "{{ .File }}", -1)
 	s.pattern = strings.Replace(s.pattern, PackageToken, "{{ .File }}", -1)
 	s.pattern = strings.Replace(s.pattern, ProjectToken, "{{ .File }}", -1)
 	s.pattern = strings.Replace(s.pattern, FileToken, "{{ .File }}", -1)
+	s.pattern = strings.Replace(s.pattern, TraceIDToken, "{{ .TraceID }}", -1)
+	s.pattern = strings.Replace(s.pattern, LevelToken, "{{ .Level }}", -1)
 	s.pattern = strings.Replace(s.pattern, strconv.Itoa(LineToken), "{{ .Line }}", -1)
 	s.pattern = strings.Replace(s.pattern, MessageToken, "{{ .Message }}", -1)
 
 	// println(s.dateFmt, s.timeFmt)
 
+	// 提取出日期和时间的格式化模式字符串
+	s.dateFmt, s.timeFmt = extactDateTimeFormat(format)
 	if s.dateFmt != "" {
 		s.pattern = strings.Replace(s.pattern, s.dateFmt, "{{ .Date }}", -1)
 	}
 	if s.timeFmt != "" {
 		s.pattern = strings.Replace(s.pattern, s.timeFmt, "{{ .Time }}", -1)
 	}
-	s.pattern += "\n"
 
 	s.tpl = template.Must(template.New("record").Parse(s.pattern))
 }
 
-// Print 打印日志
-func (s *Standard) Print(l Level, m string) error {
+type record struct {
+	Date, Time string
+	TraceID    string
+	Level      string
+	File       string
+	Line       int
+	Message    string
+	Stack      []byte
+}
+
+// Tprintf 打印日志
+func (s *Standard) Tprintf(v, l Level, tid string, format string, m ...interface{}) {
+	if v > l {
+		return
+	}
+
+	if tid == "" {
+		tid = "-"
+	}
 	r := record{
 		Level:   l.String(),
-		Message: strings.TrimRight(m, "\n"),
+		TraceID: tid,
 	}
+
+	if format == "" {
+		r.Message = fmt.Sprint(m...)
+	} else {
+		r.Message = fmt.Sprintf(format, m...)
+	}
+	r.Message = strings.TrimRight(r.Message, "\n")
 
 	if s.dateFmt != "" {
 		now := time.Now() // get this early.
@@ -117,19 +135,40 @@ func (s *Standard) Print(l Level, m string) error {
 
 	if s.prefixLen > -1 {
 		var ok bool
-		_, r.File, r.Line, ok = runtime.Caller(3) // expensive
-		if ok {
+		_, r.File, r.Line, ok = runtime.Caller(2) // expensive
+		if ok && s.prefixLen < len(r.File) {
 			r.File = r.File[s.prefixLen:]
 		} else {
 			r.File = "???"
 		}
 	}
 
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	var buf []byte
+	if l == StackLevel {
+		buf = make([]byte, 1024*1024)
+		n := runtime.Stack(buf, true)
+		buf = buf[:n]
+	}
 
-	err := s.tpl.Execute(s.out, r)
-	return err
+	s.mu.Lock()
+	defer func() {
+		s.mu.Unlock()
+
+		if l == PanicLevel {
+			panic(m)
+		}
+
+		if l == FatalLevel {
+			os.Exit(-1)
+		}
+	}()
+
+	s.tpl.Execute(s.out, r)
+	s.out.Write([]byte("\n"))
+
+	if l == StackLevel {
+		s.out.Write(buf)
+	}
 }
 
 func extactDateTimeFormat(format string) (dateFmt, timeFmt string) {
@@ -139,7 +178,6 @@ func extactDateTimeFormat(format string) (dateFmt, timeFmt string) {
 	// 如果只有一个，那么只有日期或者只有时间，无关紧要，
 	// 如果都相同，那么日志里没有时间，
 	// 如果有三处以上不同，说明格式配置错误
-	// TODO 有 bug，比如日期格式如果配置成 2006-1-2，那么两个串长度不等
 
 	t, _ := time.ParseInLocation("2006-1-2 3:4:5.000000000", "1991-2-1 1:1:1.111111111", time.Local)
 	contrast := t.Format(format)
