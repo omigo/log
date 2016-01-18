@@ -68,7 +68,7 @@ func (s *Standard) SetFormat(format string) {
 
 	s.pattern = format
 
-	s.prefixLen = calculatePrefixLen(format, 3)
+	s.prefixLen = calculatePrefixLen(format, 5)
 
 	// 顺序最好不要变，从最长的开始匹配
 	s.pattern = strings.Replace(s.pattern, PathToken, "{{ .File }}", -1)
