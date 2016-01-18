@@ -97,7 +97,7 @@ func TestFormatLog(t *testing.T) {
 	Stackf("%d %s", StackLevel, StackLevel)
 }
 
-func TestNormalLogWithTraceID(t *testing.T) {
+func TestNormalLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	ChangeFormat(format)
 	SetLevel(AllLevel)
@@ -121,7 +121,7 @@ func TestNormalLogWithTraceID(t *testing.T) {
 	Tstack(uuid, StackLevel)
 }
 
-func TestFormatLogWithTraceID(t *testing.T) {
+func TestFormatLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	ChangeFormat(format)
 	SetLevel(AllLevel)
@@ -145,7 +145,7 @@ func TestFormatLogWithTraceID(t *testing.T) {
 	Tstackf(uuid, "%d %s", StackLevel, StackLevel)
 }
 
-func TestWothingNormalLogWithTraceID(t *testing.T) {
+func TestWothingNormalLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	ChangeFormat(format)
 	SetLevel(AllLevel)
@@ -169,7 +169,7 @@ func TestWothingNormalLogWithTraceID(t *testing.T) {
 	StackT(uuid, StackLevel)
 }
 
-func TestWothingFormatLogWithTraceID(t *testing.T) {
+func TestWothingFormatLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	ChangeFormat(format)
 	SetLevel(AllLevel)
