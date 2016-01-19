@@ -2,58 +2,11 @@ package log
 
 import "io"
 
-// 可以用这些串和日期、时间（包含毫秒数）任意组合，拼成各种格式的日志，如 csv/json/xml
-const (
-	LevelToken   string = "info"
-	TagToken            = "tag"
-	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
-	PackageToken        = "github.com/gotips/log/examples/main.go"
-	ProjectToken        = "examples/main.go"
-	FileToken           = "main.go"
-	LineToken    int    = 88
-	MessageToken string = "message"
-)
+// 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
+var v Level = DebugLevel
 
-// DefaultFormat 默认日志格式
-const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
-
-// DefaultFormatTag 默认日志格式带标签
-const DefaultFormatTag = "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-
-// Level 日志级别
-type Level uint8
-
-// 所有日志级别常量，级别越高，日志越重要，级别越低，日志越详细
-const (
-	AllLevel Level = iota // 等同于 TraceLevel
-
-	TraceLevel
-	DebugLevel // 默认日志级别，方便开发
-	InfoLevel
-	WarnLevel
-	ErrorLevel
-	PanicLevel // panic 打印错误栈，但是可以 recover
-	FatalLevel // fatal 表明严重错误，程序直接退出，慎用
-
-	// 提供这个级别日志，方便在无论何种情况下，都打印必要信息，比如服务启动信息
-	PrintLevel
-	StackLevel // 打印堆栈信息
-)
-
-// Labels 每个级别对应的标签
-var Labels = [...]string{"all", "trace", "debug", "info", "warn", "error", "panic", "fatal", "print", "stack"}
-
-// String 返回日志标签
-func (v Level) String() string {
-	return Labels[v]
-}
-
-var (
-	// 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
-	v Level = DebugLevel
-	// 默认实现，输出到 os.Std 中，可以重定向到文件中，也可以调用 SetPrinter 其他方式输出
-	std Printer
-)
+// 默认实现，输出到 os.Std 中，可以重定向到文件中，也可以调用 SetPrinter 其他方式输出
+var std Printer
 
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
