@@ -36,19 +36,19 @@ import "github.com/gotips/log"
 func main() {
     log.Debugf("this is a test message, %d", 1111)
 
-	format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TraceIDToken,
+	format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TagToken,
 		log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.SetFormat(format)
+	log.ChangeFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
 		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.SetFormat(format)
+	log.ChangeFormat(format)
 	log.Infof("this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
 		"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.SetFormat(format)
+	log.ChangeFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 }
 ```
@@ -110,8 +110,9 @@ func (f *Foo)Bar(){
 TODO
 ----
 
-* examples and comments
+* examples
 * Benchmark Test
+* 把 ChangeFormat 和 ChangeWriter 方法提出 printer 之外，放到 log.go 中
 * 测试是否支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动

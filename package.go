@@ -16,19 +16,19 @@ Package log 实现了一个标准的可以自定义级别的 log 库，就像 sl
     func main() {
         log.Debugf("this is a test message, %d", 1111)
 
-        format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TraceIDToken,
+        format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TagToken,
         	log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-        log.SetFormat(format)
+        log.ChangeFormat(format)
         log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 
         format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
         	"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-        log.SetFormat(format)
+        log.ChangeFormat(format)
         log.Infof("this is a test message, %d", 1111)
 
         format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
         	"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-        log.SetFormat(format)
+        log.ChangeFormat(format)
         log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
     }
 
