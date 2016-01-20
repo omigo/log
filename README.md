@@ -64,6 +64,12 @@ func main() {
 更多用法 [examples](examples/main.go)
 
 
+Go Doc and API
+--------------
+
+所有可调用的接口 API 和 文档都在 [log.go](log.go)
+
+
 log/Printer/Standard
 --------------------
 

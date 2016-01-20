@@ -89,6 +89,9 @@ func Tstackf(tag string, format string, m ...interface{}) {
 	std.Tprintf(v, StackLevel, tag, format, m...)
 }
 
+// ======== 兼容 qiniu/log   ===============
+func SetOutputLevel(l Level) { v = l }
+
 // ======== 兼容 wothing/log ===============
 
 // 打印日志时带上 tag
