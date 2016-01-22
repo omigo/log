@@ -62,3 +62,13 @@ func (v *Level) UnmarshalJSON(b []byte) error {
 	*v = x
 	return nil
 }
+
+// ======== 兼容 qiniu/log   ===============
+const (
+	Ldebug = DebugLevel
+	Linfo  = InfoLevel
+	Lwarn  = WarnLevel
+	Lerror = ErrorLevel
+	Lpanic = PanicLevel
+	Lfatal = FatalLevel
+)
