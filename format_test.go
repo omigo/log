@@ -27,15 +27,16 @@ func TestCalculatePrefixLen(t *testing.T) {
 		t.FailNow()
 	}
 
+	println(file)
 	format = `{"level": "info", "file": "examples/main.go", "line":88, "log": "message"}`
 	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != strings.Index(file, "standard_test.go") {
+	if prefixLen != strings.LastIndex(file, "/")+1 {
 		t.FailNow()
 	}
 
 	format = `{"level": "info", "file": "main.go", "line":88, "log": "message"}`
 	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != strings.Index(file, "standard_test.go") {
+	if prefixLen != strings.LastIndex(file, "/")+1 {
 		t.FailNow()
 	}
 }
