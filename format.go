@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -25,28 +24,6 @@ const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
 
 // DefaultFormatTag 默认日志格式带标签
 const DefaultFormatTag = "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-
-// ParseFormat 格式解析，把格式串替换成 token 串
-func ParseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern string) {
-	// 顺序最好不要变，从最长的开始匹配
-	pattern = strings.Replace(format, PathToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, PackageToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, ProjectToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, FileToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, TagToken, "{{ .Tag }}", -1)
-	pattern = strings.Replace(pattern, LevelToken, "{{ .Level }}", -1)
-	pattern = strings.Replace(pattern, strconv.Itoa(LineToken), "{{ .Line }}", -1)
-	pattern = strings.Replace(pattern, MessageToken, "{{ .Message }}", -1)
-
-	// 提取出日期和时间的格式化模式字符串
-	if dateFmt != "" {
-		pattern = strings.Replace(pattern, dateFmt, "{{ .Date }}", -1)
-	}
-	if timeFmt != "" {
-		pattern = strings.Replace(pattern, timeFmt, "{{ .Time }}", -1)
-	}
-	return pattern
-}
 
 // ExtactDateTime 抽取日期和时间格式字符串串
 func ExtactDateTime(format string) (dateFmt, timeFmt string) {

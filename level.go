@@ -35,8 +35,8 @@ func (v Level) String() string {
 
 // ValueOfLevel 字符串转换成 Level, "debug" => DebugLevel
 func ValueOfLevel(vstr string) (v Level, err error) {
-	for i, l := 0, len(Labels); i < l; i++ {
-		if vstr == Labels[i] {
+	for i, label := range Labels {
+		if vstr == label {
 			return Level(i), nil
 		}
 	}

@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -38,22 +39,22 @@ type Standard struct {
 func NewStandard(out io.Writer, format string) *Standard {
 	std := &Standard{out: out}
 
-	// hack 如果用户不调用 ChangeFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
+	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
 	std.prefixLen = -5
 
-	std.ChangeFormat(format)
+	std.SetFormat(format)
 	return std
 }
 
-// ChangeWriter 改变输出流
-func (s *Standard) ChangeWriter(w io.Writer) {
+// SetWriter 改变输出流
+func (s *Standard) SetWriter(w io.Writer) {
 	s.mu.Lock()
 	s.out = w
 	s.mu.Unlock()
 }
 
-// ChangeFormat 改变日志格式
-func (s *Standard) ChangeFormat(format string) {
+// SetFormat 改变日志格式
+func (s *Standard) SetFormat(format string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -65,7 +66,7 @@ func (s *Standard) ChangeFormat(format string) {
 
 	s.dateFmt, s.timeFmt = ExtactDateTime(format)
 
-	pattern := ParseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
+	pattern := parseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
 
 	s.tpl = template.Must(template.New("record").Parse(pattern))
 }
@@ -135,4 +136,26 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 	if l == StackLevel {
 		s.out.Write(buf)
 	}
+}
+
+// 格式解析，把格式串替换成 token 串
+func parseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern string) {
+	// 顺序最好不要变，从最长的开始匹配
+	pattern = strings.Replace(format, PathToken, "{{ .File }}", -1)
+	pattern = strings.Replace(pattern, PackageToken, "{{ .File }}", -1)
+	pattern = strings.Replace(pattern, ProjectToken, "{{ .File }}", -1)
+	pattern = strings.Replace(pattern, FileToken, "{{ .File }}", -1)
+	pattern = strings.Replace(pattern, TagToken, "{{ .Tag }}", -1)
+	pattern = strings.Replace(pattern, LevelToken, "{{ .Level }}", -1)
+	pattern = strings.Replace(pattern, strconv.Itoa(LineToken), "{{ .Line }}", -1)
+	pattern = strings.Replace(pattern, MessageToken, "{{ .Message }}", -1)
+
+	// 提取出日期和时间的格式化模式字符串
+	if dateFmt != "" {
+		pattern = strings.Replace(pattern, dateFmt, "{{ .Date }}", -1)
+	}
+	if timeFmt != "" {
+		pattern = strings.Replace(pattern, timeFmt, "{{ .Time }}", -1)
+	}
+	return pattern
 }

@@ -38,17 +38,17 @@ func main() {
 
 	format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TagToken,
 		log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.ChangeFormat(format)
+	log.SetFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
 		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.ChangeFormat(format)
+	log.SetFormat(format)
 	log.Infof("this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
 		"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
-	log.ChangeFormat(format)
+	log.SetFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 }
 ```
@@ -75,7 +75,6 @@ log/Printer/Standard
 
 Golang 不同于 Java，非面向对象语言（没有继承，只有组合，不能把组合实例赋给被组合的实例，即 Java
 说的 子对象 赋给 父对象），为了方便使用，很多函数都是包封装的，无需创建 struct ，就可以直接调用。
-
 （一般把裸漏的方法称为函数，结构体和其他类型的方法才称为某某的方法）
 
 log 包也一样，使用时，无需 new ，直接用。log 包有所有级别的函数可以调用，所有函数最终都调用了
@@ -84,41 +83,13 @@ print 函数。print 函数又调用了包内部变量的 std 的 Print 方法�
 
 Printer 有个基本的实现 Standard，如果不改变，默认使用这个实现打印日志。
 
-Standard 实现了的 Printer 接口，以简洁的格式把日志打印到 Stdout。
+Standard 实现了的 Printer 接口，把日志打印到 Stdout。
 
-
-TraceID 问题
-------------
-
-对有些项目，需要在各个系统之间跟踪请求链路，往往会产生一个请求的唯一标识 traceID，以下简称 tid，
-需要在日志中打印出 tid。
-
-Golang 1.4 之前可以取到 goroutine ID(goid)，但之后就取不到了，不然 log 库就可以通过上下文
-直接取到 tid。目前来说，只能有两个折中的办法：
-
-* tid 透传，所有方法都带上 tid 参数，或者使用 google context 库，传递更多参数，推荐后者，log
-日志时，也带上这个 tid 参数；
-
-* 如果系统按功能模块划分，而不是按层次划分，可以定义一个 struct ，比如 Foo ，把 TID 作为它的
-一个属性，每个请求进入时，new 一个 struct ，传入 tid ，`Foo{tid}`，方法体内可以使用
-
-``` go
-func (f *Foo)Bar(){
-    log.Tinfof( f.TID, "get %s", "something")
-}
-```
-
-如果也不想在打印日志时传递 tid，可以定义一个 log 实现 Logger2 ，组合到 Foo 中，Logger 就可
-以取到 tid 了，new Foo 时，也要 new Logger2 ，调用 `f.Infof("%s", "something")`。但这
-样需要实现所有的 Trace/Debug/Info/Warn/Error/Fatal[f] 方法，而且无法切换 log 实现了，除
-非改 Logger2 源码，这叫封装，就不是扩展了。不推荐这种极端做法！
 
 TODO
 ----
 
-* examples
 * Benchmark Test
-* 把 ChangeFormat 和 ChangeWriter 方法提出 printer 之外，放到 log.go 中
 * 测试是否支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动

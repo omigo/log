@@ -11,14 +11,17 @@ var std Printer
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
 
+// GetLevel 返回设置的日志级别
+func GetLevel() (l Level) { return v }
+
 // SetPrinter 切换 Printer 实现
 func SetPrinter(p Printer) { std = p }
 
-// ChangeWriter 改变输出位置，通过这个接口，可以实现日志文件按时间或按大小滚动
-func ChangeWriter(w io.Writer) { std.ChangeWriter(w) }
+// SetWriter 改变输出位置，通过这个接口，可以实现日志文件按时间或按大小滚动
+func SetWriter(w io.Writer) { std.SetWriter(w) }
 
-// ChangeFormat 改变日志格式
-func ChangeFormat(format string) { std.ChangeFormat(format) }
+// SetFormat 改变日志格式
+func SetFormat(format string) { std.SetFormat(format) }
 
 // 判断各种级别的日志是否会被输出
 func IsTraceEnabled() bool { return v <= TraceLevel }
