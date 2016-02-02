@@ -35,4 +35,6 @@ func TestSetFormatFile(t *testing.T) {
 	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<file>github.com/gotips/log/test/log_test.go</file>")) {
 		t.FailNow()
 	}
+
+	log.SetFormat(log.DefaultFormat)
 }

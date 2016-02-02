@@ -1,6 +1,7 @@
 package log
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -24,20 +25,18 @@ type record struct {
 
 // Standard 日志输出基本实现
 type Standard struct {
-	mu  sync.Mutex // ensures atomic writes; protects the following fields
-	out io.Writer  // destination for output
+	mu  sync.Mutex    // ensures atomic writes; protects the following fields
+	out *bufio.Writer // destination for output
 
 	tpl       *template.Template
 	prefixLen int
 	dateFmt   string
 	timeFmt   string
-
-	defaultOne bool
 }
 
 // NewStandard 返回标准实现
-func NewStandard(out io.Writer, format string) *Standard {
-	std := &Standard{out: out}
+func NewStandard(w io.Writer, format string) *Standard {
+	std := &Standard{out: bufio.NewWriter(w)}
 
 	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
 	std.prefixLen = -5
@@ -49,7 +48,7 @@ func NewStandard(out io.Writer, format string) *Standard {
 // SetWriter 改变输出流
 func (s *Standard) SetWriter(w io.Writer) {
 	s.mu.Lock()
-	s.out = w
+	s.out = bufio.NewWriter(w)
 	s.mu.Unlock()
 }
 
@@ -110,11 +109,10 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 		}
 	}
 
-	var buf []byte
 	if l == StackLevel {
-		buf = make([]byte, 1024*1024)
-		n := runtime.Stack(buf, true)
-		buf = buf[:n]
+		r.Stack = make([]byte, 1024*1024)
+		n := runtime.Stack(r.Stack, true)
+		r.Stack = r.Stack[:n]
 	}
 
 	s.mu.Lock()
@@ -131,11 +129,13 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 	}()
 
 	s.tpl.Execute(s.out, r)
-	s.out.Write([]byte("\n"))
+	s.out.WriteByte('\n')
 
 	if l == StackLevel {
-		s.out.Write(buf)
+		s.out.Write(r.Stack)
 	}
+
+	s.out.Flush()
 }
 
 // 格式解析，把格式串替换成 token 串
