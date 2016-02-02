@@ -19,6 +19,9 @@ type Printer interface {
 	// SetFormat 改变日志格式
 	SetFormat(format string)
 
+	// 输出日志是否着色，默认着色
+	Colorized(c bool)
+
 	// SetWriter 改变输出流
 	SetWriter(w io.Writer)
 }

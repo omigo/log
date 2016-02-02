@@ -29,6 +29,10 @@ type Standard struct {
 	mu  sync.Mutex    // ensures atomic writes; protects the following fields
 	out *bufio.Writer // destination for output
 
+	format    string
+	pattern   string
+	colorized bool
+
 	tpl       *template.Template
 	prefixLen int
 	dateFmt   string
@@ -37,7 +41,7 @@ type Standard struct {
 
 // NewStandard 返回标准实现
 func NewStandard(w io.Writer, format string) *Standard {
-	std := &Standard{out: bufio.NewWriter(w)}
+	std := &Standard{out: bufio.NewWriter(w), colorized: true}
 
 	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
 	std.prefixLen = -5
@@ -53,10 +57,29 @@ func (s *Standard) SetWriter(w io.Writer) {
 	s.mu.Unlock()
 }
 
+// Colorized 输出日志是否着色，默认着色
+func (s *Standard) Colorized(c bool) {
+	// 没改变
+	if c == s.colorized {
+		return
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	p := s.pattern
+	if s.colorized {
+		p = "{{.Start}}" + p + "{{.End}}"
+	}
+	s.tpl = template.Must(template.New("record").Parse(p))
+}
+
 // SetFormat 改变日志格式
 func (s *Standard) SetFormat(format string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
+	s.format = format
 
 	skip := 3
 	if s.prefixLen == -5 {
@@ -66,12 +89,13 @@ func (s *Standard) SetFormat(format string) {
 
 	s.dateFmt, s.timeFmt = ExtactDateTime(format)
 
-	pattern := parseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
+	p := parseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
 
-	if c {
-		pattern = "{{.Start}}" + pattern + "{{.End}}"
+	s.pattern = p
+	if s.colorized {
+		p = "{{.Start}}" + p + "{{.End}}"
 	}
-	s.tpl = template.Must(template.New("record").Parse(pattern))
+	s.tpl = template.Must(template.New("record").Parse(p))
 }
 
 // Tprintf 打印日志
@@ -119,7 +143,7 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 		r.Stack = r.Stack[:n]
 	}
 
-	if c {
+	if s.colorized {
 		calculateColor(l, &r)
 	}
 

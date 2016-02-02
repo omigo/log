@@ -97,6 +97,9 @@ func (p *CustomPrinter) Tprintf(v, l log.Level, tag string, format string, m ...
 	p.buf.WriteByte('\n')
 }
 
+// Colorized 着色
+func (p *CustomPrinter) Colorized(c bool) {}
+
 // SetFormat 设置格式
 func (p *CustomPrinter) SetFormat(format string) {
 	p.mu.Lock()
