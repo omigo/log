@@ -5,11 +5,19 @@ import "io"
 // 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
 var v Level = DebugLevel
 
+// 输出日志是否着色，默认着色
+var c bool = true
+
 // 默认实现，输出到 os.Std 中，可以重定向到文件中，也可以调用 SetPrinter 其他方式输出
 var std Printer
 
 // SetLevel 设置日志级别
-func SetLevel(l Level) { v = l }
+func SetLevel(l Level, colorized ...bool) {
+	v = l
+	if len(colorized) > 0 {
+		c = colorized[0]
+	}
+}
 
 // GetLevel 返回设置的日志级别
 func GetLevel() (l Level) { return v }

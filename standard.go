@@ -14,6 +14,7 @@ import (
 )
 
 type record struct {
+	Start, End string
 	Date, Time string
 	Tag        string
 	Level      string
@@ -67,6 +68,9 @@ func (s *Standard) SetFormat(format string) {
 
 	pattern := parseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
 
+	if c {
+		pattern = "{{.Start}}" + pattern + "{{.End}}"
+	}
 	s.tpl = template.Must(template.New("record").Parse(pattern))
 }
 
@@ -92,13 +96,6 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 		}
 	}
 
-	if format == "" {
-		r.Message = fmt.Sprint(m...)
-	} else {
-		r.Message = fmt.Sprintf(format, m...)
-	}
-	r.Message = strings.TrimRight(r.Message, "\n")
-
 	if s.prefixLen > -1 {
 		var ok bool
 		_, r.File, r.Line, ok = runtime.Caller(2) // expensive
@@ -109,10 +106,21 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 		}
 	}
 
+	if format == "" {
+		r.Message = fmt.Sprint(m...)
+	} else {
+		r.Message = fmt.Sprintf(format, m...)
+	}
+	r.Message = strings.TrimRight(r.Message, "\n")
+
 	if l == StackLevel {
 		r.Stack = make([]byte, 1024*1024)
 		n := runtime.Stack(r.Stack, true)
 		r.Stack = r.Stack[:n]
+	}
+
+	if c {
+		calculateColor(l, &r)
 	}
 
 	s.mu.Lock()
@@ -158,4 +166,47 @@ func parseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern
 		pattern = strings.Replace(pattern, timeFmt, "{{ .Time }}", -1)
 	}
 	return pattern
+}
+
+func calculateColor(l Level, r *record) {
+	if l < InfoLevel {
+		return
+	}
+
+	// 字背景颜色范围:40----49
+	// 40:黑
+	// 41:深红
+	// 42:绿
+	// 43:黄色
+	// 44:蓝色
+	// 45:紫色
+	// 46:深绿
+	// 47:白色
+	//
+	// 字颜色:30-----------39
+	// 30:黑
+	// 31:红
+	// 32:绿
+	// 33:黄
+	// 34:蓝色
+	// 35:紫色
+	// 36:深绿
+	// 37:白色
+	switch l {
+	case InfoLevel:
+		r.Start = "\033[36;1m" // green
+
+	case WarnLevel:
+		r.Start = "\033[33;1m" // yellow
+
+	case ErrorLevel, PanicLevel, FatalLevel:
+		r.Start = "\033[31;1m" // red
+
+	case PrintLevel, StackLevel:
+		r.Start = "\033[32;1m" // green
+
+	default:
+		r.Start = "\033[0m" // default
+	}
+	r.End = "\033[0m"
 }
