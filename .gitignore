@@ -23,6 +23,8 @@ _testmain.go
 *.test
 *.prof
 
+.DS_Store
+
 /tmp/
 /logs/
 /test/test.log
