@@ -64,6 +64,8 @@ func (s *Standard) Colorized(c bool) {
 		return
 	}
 
+	s.colorized = c
+
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
