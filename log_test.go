@@ -5,9 +5,19 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/wothing/log"
 )
 
 const uuid = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+
+func TestTraceOut(t *testing.T) {
+	SetFormat(DefaultFormatTag)
+	defer log.TraceOut(log.TraceIn(uuid, "TestTraceOut", "userId=%v", "0001"))
+
+	// do something
+	SetFormat(DefaultFormat)
+}
 
 func TestLogLevel(t *testing.T) {
 	SetLevel(InfoLevel)
@@ -143,52 +153,4 @@ func TestFormatLogWithTag(t *testing.T) {
 	// Tfatalf(uuid,"%d %s", FatalLevel, FatalLevel)
 	Tprintf(uuid, "%d %s", PrintLevel, PrintLevel)
 	Tstackf(uuid, "%d %s", StackLevel, StackLevel)
-}
-
-func TestWothingNormalLogWithTag(t *testing.T) {
-	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
-	SetLevel(AllLevel)
-
-	TraceT(uuid, AllLevel)
-	TraceT(uuid, TraceLevel)
-	DebugT(uuid, DebugLevel)
-	InfoT(uuid, InfoLevel)
-	WarnT(uuid, WarnLevel)
-	ErrorT(uuid, ErrorLevel)
-	func() {
-		defer func() {
-			if err := recover(); err == nil {
-				t.Fail()
-			}
-		}()
-		PanicT(uuid, PanicLevel)
-	}()
-	// FatalT(uuid, FatalLevel)
-	PrintT(uuid, PrintLevel)
-	StackT(uuid, StackLevel)
-}
-
-func TestWothingFormatLogWithTag(t *testing.T) {
-	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
-	SetFormat(format)
-	SetLevel(AllLevel)
-
-	TracefT(uuid, "%d %s", AllLevel, AllLevel)
-	TracefT(uuid, "%d %s", TraceLevel, TraceLevel)
-	DebugfT(uuid, "%d %s", DebugLevel, DebugLevel)
-	InfofT(uuid, "%d %s", InfoLevel, InfoLevel)
-	WarnfT(uuid, "%d %s", WarnLevel, WarnLevel)
-	ErrorfT(uuid, "%d %s", ErrorLevel, ErrorLevel)
-	func() {
-		defer func() {
-			if err := recover(); err == nil {
-				t.Fail()
-			}
-		}()
-		PanicfT(uuid, "%d %s", PanicLevel, PanicLevel)
-	}()
-	// FatalfT(uuid,"%d %s", FatalLevel, FatalLevel)
-	PrintfT(uuid, "%d %s", PrintLevel, PrintLevel)
-	StackfT(uuid, "%d %s", StackLevel, StackLevel)
 }

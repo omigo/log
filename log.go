@@ -1,6 +1,9 @@
 package log
 
-import "io"
+import (
+	"io"
+	"time"
+)
 
 // 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
 var v Level = DebugLevel
@@ -100,38 +103,23 @@ func SetOutputLevel(l Level) { v = l }
 
 // ======== 兼容 wothing/log ===============
 
-// 打印日志时带上 tag
-func TraceT(tag string, m ...interface{}) { std.Tprintf(v, TraceLevel, tag, "", m...) }
-func DebugT(tag string, m ...interface{}) { std.Tprintf(v, DebugLevel, tag, "", m...) }
-func InfoT(tag string, m ...interface{})  { std.Tprintf(v, InfoLevel, tag, "", m...) }
-func WarnT(tag string, m ...interface{})  { std.Tprintf(v, WarnLevel, tag, "", m...) }
-func ErrorT(tag string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tag, "", m...) }
-func PanicT(tag string, m ...interface{}) { std.Tprintf(v, PanicLevel, tag, "", m...) }
-func FatalT(tag string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, "", m...) }
-func PrintT(tag string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, "", m...) }
-func StackT(tag string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, "", m...) }
+// TraceIn and TraceOut use in function in and out,reduce code line
+// Example:
+//	func test() {
+//		user := User{Name: "zhangsan", Age: 21, School: "xayddx"}
+//		service := "verification.GetVerifiCode"
+//		defer log.TraceOut(log.TraceIn("12345", service, "user:%v", user))
+//		....
+//	}
 
-// 按一定格式打印日志，并在打印日志时带上 tag
-func TracefT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, TraceLevel, tag, format, m...)
+// TraceIn 方法入口打印日志
+func TraceIn(tag string, method string, format string, m ...interface{}) (string, string, time.Time) {
+	startTime := time.Now()
+	std.Tprintf(v, InfoLevel, tag, "calling "+method+", "+format, m...)
+	return tag, method, startTime
 }
-func DebugfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, DebugLevel, tag, format, m...)
-}
-func InfofT(tag string, format string, m ...interface{}) { std.Tprintf(v, InfoLevel, tag, format, m...) }
-func WarnfT(tag string, format string, m ...interface{}) { std.Tprintf(v, WarnLevel, tag, format, m...) }
-func ErrorfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, ErrorLevel, tag, format, m...)
-}
-func PanicfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, PanicLevel, tag, format, m...)
-}
-func FatalfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, FatalLevel, tag, format, m...)
-}
-func PrintfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, PrintLevel, tag, format, m...)
-}
-func StackfT(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, StackLevel, tag, format, m...)
+
+// TraceOut 方法退出记录下消耗时间
+func TraceOut(tag string, method string, startTime time.Time) {
+	std.Tprintf(v, InfoLevel, tag, "finished "+method+", took %v", time.Since(startTime))
 }
