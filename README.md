@@ -11,12 +11,12 @@ Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，�
 
 或许对标准库的设计 Golang 开发团队有自己的考虑，但是对应用开发者来说，log4j 已经成为事实上的标
 准。为了向这个标准库靠近，出现了众多第三方 log 库，有在标准库基础上扩展的（也许 Golang 设计者
-们也是想让开发者自己扩展标准库的 log 呢），也就另辟蹊径，也有玩各种花样的。
+们也是想让开发者自己扩展标准库的 log 呢），也有另辟蹊径，也有玩各种花样的。
 
 虽然有那么多的 log 库，但都是大同小异，我们需要的也只是个标准的可以自定义级别的 log 库而已，就
 像 slf4j(Simple Logging Facade for Java) 一样，所以这个 log 库的需要完成得任务就是提供一
 个标准统一的接口，同时也提供了一个基本的实现，可以自己定义模板格式，输出各种类型的日志，如
-csv/json/xml，同时支持 TraceID。
+csv/json/xml，同时支持 Tag（TraceId/RequestId)。
 
 使用这个 log 库打印日志，可以随时切换日志级别，可以更换不同的 logger 实现，以打印不同格式的日
 志，也可以改变日志输出位置，输出到数据库、消息队列等，者所有的改变都无需修改已经写好的项目源码。
@@ -58,11 +58,10 @@ func main() {
 2016-01-16 20:28:34.280601 6ba7b814-9dad-11d1-80b4-00c04fd430c8 info examples/main.go:15 this is a test message, 1111
 {"date": "2016-01-16", "time": "20:28:34.28", "level": "info", "file": "examples/main.go", "line": 20, "log": "this is a test message, 1111"}
 <log><date>2016-01-16</date><time>20:28:34.280</time><level>info</level><file>examples/main.go</file><line>25</line><msg>this is a test message, 1111</msg><log>
-
 ```
 
 更多用法 [examples](examples/main.go)
-
+着色示例 ![color.png](color.png)
 
 Go Doc and API
 --------------
@@ -90,7 +89,7 @@ Standard 实现了的 Printer 接口，把日志打印到 Stdout。
 性能测试
 -------
 
-环境：MacBookPro 17，4 核 8 线程 16G 内存
+环境：MacBookPro 15，4 核 8 线程 16G 内存
 
 实际测试结果（把日志重定向到文件）：
 该库平均每秒可输出 16w 行日志；
@@ -111,4 +110,4 @@ TODO
 Others
 ------
 
-最近更新请移步 https://github.com/omigo/log
+最近更新请移步 https://github.com/arstd/log
