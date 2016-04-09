@@ -72,5 +72,7 @@ func TestExtactDateTime(t *testing.T) {
 		// 有两个 2006 ，会出错
 		format = `{"date": "2006-01-02", "time": "15:04:05.999999999", "Tag": "2006" "level": "info", "file": "log/main.go", "line":88, "log": "message"}`
 		dateFmt, timeFmt = ExtactDateTime(format)
+
+		_, _ = dateFmt, timeFmt
 	}()
 }

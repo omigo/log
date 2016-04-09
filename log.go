@@ -80,30 +80,3 @@ func Tpanicf(tag string, format string, m ...interface{}) { std.Tprintf(v, Panic
 func Tfatalf(tag string, format string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, format, m...)}
 func Tprintf(tag string, format string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, format, m...)}
 func Tstackf(tag string, format string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, format, m...)}
-
-// ======== 兼容 qiniu/log   ===============
-func SetOutputLevel(l Level) { v = l }
-
-// ======== 兼容 wothing/log ===============
-
-// 打印日志时带上 tag
-func TraceT(tag string, m ...interface{}) { std.Tprintf(v, TraceLevel, tag, "", m...) }
-func DebugT(tag string, m ...interface{}) { std.Tprintf(v, DebugLevel, tag, "", m...) }
-func InfoT(tag string, m ...interface{})  { std.Tprintf(v, InfoLevel, tag, "", m...) }
-func WarnT(tag string, m ...interface{})  { std.Tprintf(v, WarnLevel, tag, "", m...) }
-func ErrorT(tag string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tag, "", m...) }
-func PanicT(tag string, m ...interface{}) { std.Tprintf(v, PanicLevel, tag, "", m...) }
-func FatalT(tag string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, "", m...) }
-func PrintT(tag string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, "", m...) }
-func StackT(tag string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, "", m...) }
-
-// 按一定格式打印日志，并在打印日志时带上 tag
-func TracefT(tag string, format string, m ...interface{}) { std.Tprintf(v, TraceLevel, tag, format, m...)}
-func DebugfT(tag string, format string, m ...interface{}) { std.Tprintf(v, DebugLevel, tag, format, m...)}
-func InfofT(tag string, format string, m ...interface{})  { std.Tprintf(v, InfoLevel, tag, format, m...) }
-func WarnfT(tag string, format string, m ...interface{})  { std.Tprintf(v, WarnLevel, tag, format, m...) }
-func ErrorfT(tag string, format string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tag, format, m...)}
-func PanicfT(tag string, format string, m ...interface{}) { std.Tprintf(v, PanicLevel, tag, format, m...)}
-func FatalfT(tag string, format string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, format, m...)}
-func PrintfT(tag string, format string, m ...interface{}) {std.Tprintf(v, PrintLevel, tag, format, m...)}
-func StackfT(tag string, format string, m ...interface{}) {std.Tprintf(v, StackLevel, tag, format, m...)}
