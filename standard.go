@@ -41,7 +41,7 @@ type Standard struct {
 
 // NewStandard 返回标准实现
 func NewStandard(w io.Writer, format string) *Standard {
-	std := &Standard{out: bufio.NewWriter(w), colorized: true}
+	std := &Standard{out: bufio.NewWriter(w)}
 
 	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
 	std.prefixLen = -5
@@ -146,7 +146,7 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 	}
 
 	if s.colorized {
-		calculateColor(l, &r)
+		r.Start, r.End = calculateColor(l)
 	}
 
 	s.mu.Lock()
@@ -194,45 +194,54 @@ func parseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern
 	return pattern
 }
 
-func calculateColor(l Level, r *record) {
-	if l < InfoLevel {
-		return
+func calculateColor(l Level) (start, end string) {
+	// all, trace, debug,          info,      warn,      error,     panic,     fatal,print,stack
+	colors := []string{"", "", "", "0;32;40", "0;34;40", "0;31;40", "0;35;40", "0;35;40", "", ""}
+	if colors[l] != "" {
+		start = "\033[" + colors[l] + "m"
+		end = "\033[0m"
 	}
-
-	// 字背景颜色范围:40----49
-	// 40:黑
-	// 41:深红
-	// 42:绿
-	// 43:黄色
-	// 44:蓝色
-	// 45:紫色
-	// 46:深绿
-	// 47:白色
-	//
-	// 字颜色:30-----------39
-	// 30:黑
-	// 31:红
-	// 32:绿
-	// 33:黄
-	// 34:蓝色
-	// 35:紫色
-	// 36:深绿
-	// 37:白色
-	switch l {
-	case InfoLevel:
-		r.Start = "\033[36;1m" // green
-
-	case WarnLevel:
-		r.Start = "\033[33;1m" // yellow
-
-	case ErrorLevel, PanicLevel, FatalLevel:
-		r.Start = "\033[31;1m" // red
-
-	case PrintLevel, StackLevel:
-		r.Start = "\033[32;1m" // green
-
-	default:
-		r.Start = "\033[0m" // default
-	}
-	r.End = "\033[0m"
+	return start, end
 }
+
+/*
+
+Bash Shell定义文字颜色有三个参数：Style，Frontground和Background，每个参数有7个值，意义如下：
+
+0：黑色
+1：蓝色
+2：绿色
+3：青色
+4：红色
+5：洋红色
+6：黄色
+7：白色
+其中，+30表示前景色，+40表示背景色
+这里提供一段代码可以打印颜色表：
+
+#/bin/bash
+for STYLE in 0 1 2 3 4 5 6 7; do
+  for FG in 30 31 32 33 34 35 36 37; do
+    for BG in 40 41 42 43 44 45 46 47; do
+      CTRL="\033[${STYLE};${FG};${BG}m"
+      echo -en "${CTRL}"
+      echo -n " ${STYLE};${FG};${BG} "
+      echo -en "\033[0m"
+    done
+    echo
+  done
+  echo
+done
+# Reset
+echo -e "\033[0m"
+
+
+代码               意义
+ -------------------------
+ 0                 OFF
+ 1                  高亮显示
+ 4                 underline
+ 5                  闪烁
+ 7                  反 白显示
+ 8                  不可见
+*/

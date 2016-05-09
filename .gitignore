@@ -29,3 +29,6 @@ _testmain.go
 /logs/
 /test/test.log
 *.log
+
+# ignore compatible code
+other*

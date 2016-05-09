@@ -1,6 +1,9 @@
 package log
 
-import "io"
+import (
+	"encoding/json"
+	"io"
+)
 
 // 默认 debug 级别，方便调试，生产环境可以调用 SetLevel 设置 log 级别
 var v Level = DebugLevel
@@ -11,7 +14,7 @@ var std Printer
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
 
-// Colorized 输出日志是否着色，默认着色
+// Colorized 输出日志是否着色，默认不着色，取环境变量 LOG_COLORIZED 值
 func Colorized(c bool) { std.Colorized(c) }
 
 // GetLevel 返回设置的日志级别
@@ -71,12 +74,50 @@ func Tprint(tag string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, "", 
 func Tstack(tag string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, "", m...) }
 
 // 按一定格式打印日志，并在打印日志时带上 tag
-func Ttracef(tag string, format string, m ...interface{}) { std.Tprintf(v, TraceLevel, tag, format, m...)}
-func Tdebugf(tag string, format string, m ...interface{}) { std.Tprintf(v, DebugLevel, tag, format, m...)}
-func Tinfof(tag string, format string, m ...interface{})  { std.Tprintf(v, InfoLevel, tag, format, m...) }
-func Twarnf(tag string, format string, m ...interface{})  { std.Tprintf(v, WarnLevel, tag, format, m...) }
-func Terrorf(tag string, format string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tag, format, m...)}
-func Tpanicf(tag string, format string, m ...interface{}) { std.Tprintf(v, PanicLevel, tag, format, m...)}
-func Tfatalf(tag string, format string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, format, m...)}
-func Tprintf(tag string, format string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, format, m...)}
-func Tstackf(tag string, format string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, format, m...)}
+func Ttracef(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, TraceLevel, tag, format, m...)
+}
+func Tdebugf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, DebugLevel, tag, format, m...)
+}
+func Tinfof(tag string, format string, m ...interface{}) { std.Tprintf(v, InfoLevel, tag, format, m...) }
+func Twarnf(tag string, format string, m ...interface{}) { std.Tprintf(v, WarnLevel, tag, format, m...) }
+func Terrorf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, ErrorLevel, tag, format, m...)
+}
+func Tpanicf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, PanicLevel, tag, format, m...)
+}
+func Tfatalf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, FatalLevel, tag, format, m...)
+}
+func Tprintf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, PrintLevel, tag, format, m...)
+}
+func Tstackf(tag string, format string, m ...interface{}) {
+	std.Tprintf(v, StackLevel, tag, format, m...)
+}
+
+// 先转换成 JSON 格式，然后打印
+func JSON(m ...interface{}) {
+	if v > DebugLevel {
+		return
+	}
+	js, err := json.Marshal(m)
+	if err != nil {
+		std.Tprintf(v, DebugLevel, "", "%s", err)
+	} else {
+		std.Tprintf(v, DebugLevel, "", "%s", js)
+	}
+}
+func JSONIndent(m ...interface{}) {
+	if v > DebugLevel {
+		return
+	}
+	js, err := json.MarshalIndent(m, "", "\t")
+	if err != nil {
+		std.Tprintf(v, DebugLevel, "", "%s", err)
+	} else {
+		std.Tprintf(v, DebugLevel, "", "%s", js)
+	}
+}
