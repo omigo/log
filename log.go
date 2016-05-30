@@ -114,7 +114,7 @@ func JSONIndent(m ...interface{}) {
 	if v > DebugLevel {
 		return
 	}
-	js, err := json.MarshalIndent(m, "", "\t")
+	js, err := json.MarshalIndent(m, "", "    ")
 	if err != nil {
 		std.Tprintf(v, DebugLevel, "", "%s", err)
 	} else {

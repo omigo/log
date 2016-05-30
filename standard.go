@@ -133,11 +133,19 @@ func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface
 	}
 
 	if format == "" {
-		r.Message = fmt.Sprint(m...)
-	} else {
-		r.Message = fmt.Sprintf(format, m...)
+		for _, x := range m {
+			if _, ok := x.([]byte); ok {
+				format += ", %s"
+			} else {
+				format += ", %v"
+			}
+		}
+		if len(format) > 2 {
+			format = format[2:]
+		}
 	}
-	r.Message = strings.TrimRight(r.Message, "\n")
+	r.Message = fmt.Sprintf(format, m...)
+	r.Message = strings.TrimSpace(r.Message)
 
 	if l == StackLevel {
 		r.Stack = make([]byte, 1024*1024)
