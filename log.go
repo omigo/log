@@ -14,7 +14,7 @@ var std Printer
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
 
-// Colorized 输出日志是否着色，默认不着色，取环境变量 LOG_COLORIZED 值
+// Colorized 输出日志是否着色，默认不着色
 func Colorized(c bool) { std.Colorized(c) }
 
 // GetLevel 返回设置的日志级别

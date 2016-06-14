@@ -41,7 +41,7 @@ type Standard struct {
 
 // NewStandard 返回标准实现
 func NewStandard(w io.Writer, format string) *Standard {
-	std := &Standard{out: bufio.NewWriter(w)}
+	std := &Standard{out: bufio.NewWriter(w), colorized: true}
 
 	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
 	std.prefixLen = -5
