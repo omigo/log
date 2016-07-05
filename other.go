@@ -32,6 +32,8 @@ func SetOutputLevel(l int) { v = Level(l) }
 //		....
 //	}
 
+func Println(m ...interface{}) { std.Tprintf(v, PrintLevel, "", "", m...) }
+
 // TraceIn 方法入口打印日志
 func TraceIn(tag string, method string, format string, m ...interface{}) (string, string, time.Time) {
 	startTime := time.Now()
