@@ -101,7 +101,7 @@ func (s *Standard) SetFormat(format string) {
 }
 
 // Tprintf 打印日志
-func (s *Standard) Tprintf(v, l Level, tag string, format string, m ...interface{}) {
+func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{}) {
 	if v > l {
 		return
 	}

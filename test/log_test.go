@@ -16,7 +16,10 @@ func TestDefaultFormatFile(t *testing.T) {
 
 	msg := "this is a test message"
 	log.Info(msg)
-	if ok, _ := regexp.Match(`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} info test/log_test.go:\d+ this is a test message`, buf.Bytes()); !ok {
+	// 2016-07-06 11:54:39 - info test/log_test.go:18 this is a test message
+	if ok, _ := regexp.Match(
+		`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} -? ?info test/log_test.go:\d+ this is a test message`,
+		buf.Bytes()); !ok {
 		t.Logf("%s", buf.Bytes()) // 2016-01-24 19:41:19 info test/log_test.go:16 this is a test message
 		t.FailNow()
 	}

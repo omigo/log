@@ -41,61 +41,61 @@ func IsPrintEnabled() bool { return v <= PrintLevel }
 func IsStackEnabled() bool { return v <= StackLevel }
 
 // 打印日志
-func Trace(m ...interface{}) { std.Tprintf(v, TraceLevel, "", "", m...) }
-func Debug(m ...interface{}) { std.Tprintf(v, DebugLevel, "", "", m...) }
-func Info(m ...interface{})  { std.Tprintf(v, InfoLevel, "", "", m...) }
-func Warn(m ...interface{})  { std.Tprintf(v, WarnLevel, "", "", m...) }
-func Error(m ...interface{}) { std.Tprintf(v, ErrorLevel, "", "", m...) }
-func Panic(m ...interface{}) { std.Tprintf(v, PanicLevel, "", "", m...) }
-func Fatal(m ...interface{}) { std.Tprintf(v, FatalLevel, "", "", m...) }
-func Print(m ...interface{}) { std.Tprintf(v, PrintLevel, "", "", m...) }
-func Stack(m ...interface{}) { std.Tprintf(v, StackLevel, "", "", m...) }
+func Trace(m ...interface{}) { std.Tprintf(TraceLevel, "", "", m...) }
+func Debug(m ...interface{}) { std.Tprintf(DebugLevel, "", "", m...) }
+func Info(m ...interface{})  { std.Tprintf(InfoLevel, "", "", m...) }
+func Warn(m ...interface{})  { std.Tprintf(WarnLevel, "", "", m...) }
+func Error(m ...interface{}) { std.Tprintf(ErrorLevel, "", "", m...) }
+func Panic(m ...interface{}) { std.Tprintf(PanicLevel, "", "", m...) }
+func Fatal(m ...interface{}) { std.Tprintf(FatalLevel, "", "", m...) }
+func Print(m ...interface{}) { std.Tprintf(PrintLevel, "", "", m...) }
+func Stack(m ...interface{}) { std.Tprintf(StackLevel, "", "", m...) }
 
 // 按一定格式打印日志
-func Tracef(format string, m ...interface{}) { std.Tprintf(v, TraceLevel, "", format, m...) }
-func Debugf(format string, m ...interface{}) { std.Tprintf(v, DebugLevel, "", format, m...) }
-func Infof(format string, m ...interface{})  { std.Tprintf(v, InfoLevel, "", format, m...) }
-func Warnf(format string, m ...interface{})  { std.Tprintf(v, WarnLevel, "", format, m...) }
-func Errorf(format string, m ...interface{}) { std.Tprintf(v, ErrorLevel, "", format, m...) }
-func Panicf(format string, m ...interface{}) { std.Tprintf(v, PanicLevel, "", format, m...) }
-func Fatalf(format string, m ...interface{}) { std.Tprintf(v, FatalLevel, "", format, m...) }
-func Printf(format string, m ...interface{}) { std.Tprintf(v, PrintLevel, "", format, m...) }
-func Stackf(format string, m ...interface{}) { std.Tprintf(v, StackLevel, "", format, m...) }
+func Tracef(format string, m ...interface{}) { std.Tprintf(TraceLevel, "", format, m...) }
+func Debugf(format string, m ...interface{}) { std.Tprintf(DebugLevel, "", format, m...) }
+func Infof(format string, m ...interface{})  { std.Tprintf(InfoLevel, "", format, m...) }
+func Warnf(format string, m ...interface{})  { std.Tprintf(WarnLevel, "", format, m...) }
+func Errorf(format string, m ...interface{}) { std.Tprintf(ErrorLevel, "", format, m...) }
+func Panicf(format string, m ...interface{}) { std.Tprintf(PanicLevel, "", format, m...) }
+func Fatalf(format string, m ...interface{}) { std.Tprintf(FatalLevel, "", format, m...) }
+func Printf(format string, m ...interface{}) { std.Tprintf(PrintLevel, "", format, m...) }
+func Stackf(format string, m ...interface{}) { std.Tprintf(StackLevel, "", format, m...) }
 
 // 打印日志时带上 tag
-func Ttrace(tag string, m ...interface{}) { std.Tprintf(v, TraceLevel, tag, "", m...) }
-func Tdebug(tag string, m ...interface{}) { std.Tprintf(v, DebugLevel, tag, "", m...) }
-func Tinfo(tag string, m ...interface{})  { std.Tprintf(v, InfoLevel, tag, "", m...) }
-func Twarn(tag string, m ...interface{})  { std.Tprintf(v, WarnLevel, tag, "", m...) }
-func Terror(tag string, m ...interface{}) { std.Tprintf(v, ErrorLevel, tag, "", m...) }
-func Tpanic(tag string, m ...interface{}) { std.Tprintf(v, PanicLevel, tag, "", m...) }
-func Tfatal(tag string, m ...interface{}) { std.Tprintf(v, FatalLevel, tag, "", m...) }
-func Tprint(tag string, m ...interface{}) { std.Tprintf(v, PrintLevel, tag, "", m...) }
-func Tstack(tag string, m ...interface{}) { std.Tprintf(v, StackLevel, tag, "", m...) }
+func Ttrace(tag string, m ...interface{}) { std.Tprintf(TraceLevel, tag, "", m...) }
+func Tdebug(tag string, m ...interface{}) { std.Tprintf(DebugLevel, tag, "", m...) }
+func Tinfo(tag string, m ...interface{})  { std.Tprintf(InfoLevel, tag, "", m...) }
+func Twarn(tag string, m ...interface{})  { std.Tprintf(WarnLevel, tag, "", m...) }
+func Terror(tag string, m ...interface{}) { std.Tprintf(ErrorLevel, tag, "", m...) }
+func Tpanic(tag string, m ...interface{}) { std.Tprintf(PanicLevel, tag, "", m...) }
+func Tfatal(tag string, m ...interface{}) { std.Tprintf(FatalLevel, tag, "", m...) }
+func Tprint(tag string, m ...interface{}) { std.Tprintf(PrintLevel, tag, "", m...) }
+func Tstack(tag string, m ...interface{}) { std.Tprintf(StackLevel, tag, "", m...) }
 
 // 按一定格式打印日志，并在打印日志时带上 tag
 func Ttracef(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, TraceLevel, tag, format, m...)
+	std.Tprintf(TraceLevel, tag, format, m...)
 }
 func Tdebugf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, DebugLevel, tag, format, m...)
+	std.Tprintf(DebugLevel, tag, format, m...)
 }
-func Tinfof(tag string, format string, m ...interface{}) { std.Tprintf(v, InfoLevel, tag, format, m...) }
-func Twarnf(tag string, format string, m ...interface{}) { std.Tprintf(v, WarnLevel, tag, format, m...) }
+func Tinfof(tag string, format string, m ...interface{}) { std.Tprintf(InfoLevel, tag, format, m...) }
+func Twarnf(tag string, format string, m ...interface{}) { std.Tprintf(WarnLevel, tag, format, m...) }
 func Terrorf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, ErrorLevel, tag, format, m...)
+	std.Tprintf(ErrorLevel, tag, format, m...)
 }
 func Tpanicf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, PanicLevel, tag, format, m...)
+	std.Tprintf(PanicLevel, tag, format, m...)
 }
 func Tfatalf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, FatalLevel, tag, format, m...)
+	std.Tprintf(FatalLevel, tag, format, m...)
 }
 func Tprintf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, PrintLevel, tag, format, m...)
+	std.Tprintf(PrintLevel, tag, format, m...)
 }
 func Tstackf(tag string, format string, m ...interface{}) {
-	std.Tprintf(v, StackLevel, tag, format, m...)
+	std.Tprintf(StackLevel, tag, format, m...)
 }
 
 // 先转换成 JSON 格式，然后打印
@@ -105,9 +105,9 @@ func JSON(m ...interface{}) {
 	}
 	js, err := json.Marshal(m)
 	if err != nil {
-		std.Tprintf(v, DebugLevel, "", "%s", err)
+		std.Tprintf(DebugLevel, "", "%s", err)
 	} else {
-		std.Tprintf(v, DebugLevel, "", "%s", js)
+		std.Tprintf(DebugLevel, "", "%s", js)
 	}
 }
 func JSONIndent(m ...interface{}) {
@@ -116,8 +116,8 @@ func JSONIndent(m ...interface{}) {
 	}
 	js, err := json.MarshalIndent(m, "", "    ")
 	if err != nil {
-		std.Tprintf(v, DebugLevel, "", "%s", err)
+		std.Tprintf(DebugLevel, "", "%s", err)
 	} else {
-		std.Tprintf(v, DebugLevel, "", "%s", js)
+		std.Tprintf(DebugLevel, "", "%s", js)
 	}
 }

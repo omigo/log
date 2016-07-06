@@ -50,8 +50,8 @@ func NewCustomPrinter() *CustomPrinter {
 }
 
 // Tprintf 简单实现打印方法
-func (p *CustomPrinter) Tprintf(v, l log.Level, tag string, format string, m ...interface{}) {
-	if v > l {
+func (p *CustomPrinter) Tprintf(l log.Level, tag string, format string, m ...interface{}) {
+	if log.GetLevel() > l {
 		return
 	}
 

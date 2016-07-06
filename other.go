@@ -32,12 +32,12 @@ func SetOutputLevel(l int) { v = Level(l) }
 //		....
 //	}
 
-func Println(m ...interface{}) { std.Tprintf(v, PrintLevel, "", "", m...) }
+func Println(m ...interface{}) { std.Tprintf(PrintLevel, "", "", m...) }
 
 // TraceIn 方法入口打印日志
 func TraceIn(tag string, method string, format string, m ...interface{}) (string, string, time.Time) {
 	startTime := time.Now()
-	std.Tprintf(v, InfoLevel, tag, "calling "+method+", "+format, m...)
+	std.Tprintf(InfoLevel, tag, "calling "+method+", "+format, m...)
 	return tag, method, startTime
 }
 
@@ -50,11 +50,11 @@ func TraceCtx(ctx context.Context, method string, format string, m ...interface{
 		}
 	}
 	startTime := time.Now()
-	std.Tprintf(v, InfoLevel, tag, "calling "+method+", "+format, m...)
+	std.Tprintf(InfoLevel, tag, "calling "+method+", "+format, m...)
 	return tag, method, startTime
 }
 
 // TraceOut 方法退出记录下消耗时间
 func TraceOut(tag string, method string, startTime time.Time) {
-	std.Tprintf(v, InfoLevel, tag, "finished "+method+", took %v", time.Since(startTime))
+	std.Tprintf(InfoLevel, tag, "finished "+method+", took %v", time.Since(startTime))
 }

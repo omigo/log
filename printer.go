@@ -14,7 +14,7 @@ func init() {
 type Printer interface {
 
 	// 所有方法最终归为这个方法，真正打印日志
-	Tprintf(v, l Level, tag string, format string, m ...interface{})
+	Tprintf(l Level, tag string, format string, m ...interface{})
 
 	// SetFormat 改变日志格式
 	SetFormat(format string)
