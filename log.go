@@ -11,14 +11,14 @@ var v Level = LevelDebug
 // 默认实现，输出到 os.Std 中，可以重定向到文件中，也可以调用 SetPrinter 其他方式输出
 var std Printer
 
-// LevelSet 设置日志级别
-func LevelSet(l Level) { v = l }
+// SetLevel 设置日志级别
+func SetLevel(l Level) { v = l }
 
 // Colorized 输出日志是否着色，默认不着色
 func Colorized(c bool) { std.Colorized(c) }
 
-// LevelGet 返回设置的日志级别
-func LevelGet() (l Level) { return v }
+// GetLevel 返回设置的日志级别
+func GetLevel() (l Level) { return v }
 
 // SetPrinter 切换 Printer 实现
 func SetPrinter(p Printer) { std = p }

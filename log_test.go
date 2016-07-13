@@ -10,11 +10,11 @@ import (
 const uuid = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 
 func TestLogLevel(t *testing.T) {
-	LevelSet(LevelInfo)
+	SetLevel(LevelInfo)
 	if IsDebugEnabled() || !IsInfoEnabled() || !IsWarnEnabled() {
 		t.FailNow()
 	}
-	LevelSet(LevelDebug) // 恢复现场，避免影响其他单元测试
+	SetLevel(LevelDebug) // 恢复现场，避免影响其他单元测试
 }
 
 func TestSetWriter(t *testing.T) {
@@ -54,7 +54,7 @@ func TestPanicLog(t *testing.T) {
 }
 
 func TestNormalLog(t *testing.T) {
-	LevelSet(LevelAll)
+	SetLevel(LevelAll)
 
 	Trace(LevelAll)
 	Trace(LevelTrace)
@@ -76,7 +76,7 @@ func TestNormalLog(t *testing.T) {
 }
 
 func TestFormatLog(t *testing.T) {
-	LevelSet(LevelAll)
+	SetLevel(LevelAll)
 
 	Tracef("%d %s", LevelAll, LevelAll)
 	Tracef("%d %s", LevelTrace, LevelTrace)
@@ -100,7 +100,7 @@ func TestFormatLog(t *testing.T) {
 func TestNormalLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
-	LevelSet(LevelAll)
+	SetLevel(LevelAll)
 
 	Ttrace(uuid, LevelAll)
 	Ttrace(uuid, LevelTrace)
@@ -124,7 +124,7 @@ func TestNormalLogWithTag(t *testing.T) {
 func TestFormatLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
-	LevelSet(LevelAll)
+	SetLevel(LevelAll)
 
 	Ttracef(uuid, "%d %s", LevelAll, LevelAll)
 	Ttracef(uuid, "%d %s", LevelTrace, LevelTrace)
