@@ -10,11 +10,11 @@ import (
 const uuid = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 
 func TestLogLevel(t *testing.T) {
-	SetLevel(InfoLevel)
+	LevelSet(LevelInfo)
 	if IsDebugEnabled() || !IsInfoEnabled() || !IsWarnEnabled() {
 		t.FailNow()
 	}
-	SetLevel(DebugLevel) // 恢复现场，避免影响其他单元测试
+	LevelSet(LevelDebug) // 恢复现场，避免影响其他单元测试
 }
 
 func TestSetWriter(t *testing.T) {
@@ -54,93 +54,93 @@ func TestPanicLog(t *testing.T) {
 }
 
 func TestNormalLog(t *testing.T) {
-	SetLevel(AllLevel)
+	LevelSet(LevelAll)
 
-	Trace(AllLevel)
-	Trace(TraceLevel)
-	Debug(DebugLevel)
-	Info(InfoLevel)
-	Warn(WarnLevel)
-	Error(ErrorLevel)
+	Trace(LevelAll)
+	Trace(LevelTrace)
+	Debug(LevelDebug)
+	Info(LevelInfo)
+	Warn(LevelWarn)
+	Error(LevelError)
 	func() {
 		defer func() {
 			if err := recover(); err == nil {
 				t.Fail()
 			}
 		}()
-		Panic(PanicLevel)
+		Panic(LevelPanic)
 	}()
-	// Fatal( FatalLevel)
-	Print(PrintLevel)
-	Stack(StackLevel)
+	// Fatal( LevelFatal)
+	Print(LevelPrint)
+	Stack(LevelStack)
 }
 
 func TestFormatLog(t *testing.T) {
-	SetLevel(AllLevel)
+	LevelSet(LevelAll)
 
-	Tracef("%d %s", AllLevel, AllLevel)
-	Tracef("%d %s", TraceLevel, TraceLevel)
-	Debugf("%d %s", DebugLevel, DebugLevel)
-	Infof("%d %s", InfoLevel, InfoLevel)
-	Warnf("%d %s", WarnLevel, WarnLevel)
-	Errorf("%d %s", ErrorLevel, ErrorLevel)
+	Tracef("%d %s", LevelAll, LevelAll)
+	Tracef("%d %s", LevelTrace, LevelTrace)
+	Debugf("%d %s", LevelDebug, LevelDebug)
+	Infof("%d %s", LevelInfo, LevelInfo)
+	Warnf("%d %s", LevelWarn, LevelWarn)
+	Errorf("%d %s", LevelError, LevelError)
 	func() {
 		defer func() {
 			if err := recover(); err == nil {
 				t.Fail()
 			}
 		}()
-		Panicf("%d %s", PanicLevel, PanicLevel)
+		Panicf("%d %s", LevelPanic, LevelPanic)
 	}()
-	// Fatalf("%d %s", FatalLevel, FatalLevel)
-	Printf("%d %s", PrintLevel, PrintLevel)
-	Stackf("%d %s", StackLevel, StackLevel)
+	// Fatalf("%d %s", LevelFatal, LevelFatal)
+	Printf("%d %s", LevelPrint, LevelPrint)
+	Stackf("%d %s", LevelStack, LevelStack)
 }
 
 func TestNormalLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
-	SetLevel(AllLevel)
+	LevelSet(LevelAll)
 
-	Ttrace(uuid, AllLevel)
-	Ttrace(uuid, TraceLevel)
-	Tdebug(uuid, DebugLevel)
-	Tinfo(uuid, InfoLevel)
-	Twarn(uuid, WarnLevel)
-	Terror(uuid, ErrorLevel)
+	Ttrace(uuid, LevelAll)
+	Ttrace(uuid, LevelTrace)
+	Tdebug(uuid, LevelDebug)
+	Tinfo(uuid, LevelInfo)
+	Twarn(uuid, LevelWarn)
+	Terror(uuid, LevelError)
 	func() {
 		defer func() {
 			if err := recover(); err == nil {
 				t.Fail()
 			}
 		}()
-		Tpanic(uuid, PanicLevel)
+		Tpanic(uuid, LevelPanic)
 	}()
-	// Tfatal(uuid, FatalLevel)
-	Tprint(uuid, PrintLevel)
-	Tstack(uuid, StackLevel)
+	// Tfatal(uuid, LevelFatal)
+	Tprint(uuid, LevelPrint)
+	Tstack(uuid, LevelStack)
 }
 
 func TestFormatLogWithTag(t *testing.T) {
 	format := "2006-01-02 15:04:05 tag info examples/main.go:88 message"
 	SetFormat(format)
-	SetLevel(AllLevel)
+	LevelSet(LevelAll)
 
-	Ttracef(uuid, "%d %s", AllLevel, AllLevel)
-	Ttracef(uuid, "%d %s", TraceLevel, TraceLevel)
-	Tdebugf(uuid, "%d %s", DebugLevel, DebugLevel)
-	Tinfof(uuid, "%d %s", InfoLevel, InfoLevel)
-	Twarnf(uuid, "%d %s", WarnLevel, WarnLevel)
-	Terrorf(uuid, "%d %s", ErrorLevel, ErrorLevel)
+	Ttracef(uuid, "%d %s", LevelAll, LevelAll)
+	Ttracef(uuid, "%d %s", LevelTrace, LevelTrace)
+	Tdebugf(uuid, "%d %s", LevelDebug, LevelDebug)
+	Tinfof(uuid, "%d %s", LevelInfo, LevelInfo)
+	Twarnf(uuid, "%d %s", LevelWarn, LevelWarn)
+	Terrorf(uuid, "%d %s", LevelError, LevelError)
 	func() {
 		defer func() {
 			if err := recover(); err == nil {
 				t.Fail()
 			}
 		}()
-		Tpanicf(uuid, "%d %s", PanicLevel, PanicLevel)
+		Tpanicf(uuid, "%d %s", LevelPanic, LevelPanic)
 	}()
-	// Tfatalf(uuid,"%d %s", FatalLevel, FatalLevel)
-	Tprintf(uuid, "%d %s", PrintLevel, PrintLevel)
-	Tstackf(uuid, "%d %s", StackLevel, StackLevel)
+	// Tfatalf(uuid,"%d %s", LevelFatal, LevelFatal)
+	Tprintf(uuid, "%d %s", LevelPrint, LevelPrint)
+	Tstackf(uuid, "%d %s", LevelStack, LevelStack)
 }

@@ -10,19 +10,19 @@ type Level uint8
 
 // 所有日志级别常量，级别越高，日志越重要，级别越低，日志越详细
 const (
-	AllLevel Level = iota // 等同于 TraceLevel
+	LevelAll Level = iota // 等同于 LevelTrace
 
-	TraceLevel
-	DebugLevel // 默认日志级别，方便开发
-	InfoLevel
-	WarnLevel
-	ErrorLevel
-	PanicLevel // panic 打印错误栈，但是可以 recover
-	FatalLevel // fatal 表明严重错误，程序直接退出，慎用
+	LevelTrace
+	LevelDebug // 默认日志级别，方便开发
+	LevelInfo
+	LevelWarn
+	LevelError
+	LevelPanic // panic 打印错误栈，但是可以 recover
+	LevelFatal // fatal 表明严重错误，程序直接退出，慎用
 
 	// 提供这个级别日志，方便在无论何种情况下，都打印必要信息，比如服务启动信息
-	PrintLevel
-	StackLevel // 打印堆栈信息
+	LevelPrint
+	LevelStack // 打印堆栈信息
 )
 
 // Labels 每个级别对应的标签
@@ -33,14 +33,14 @@ func (v Level) String() string {
 	return Labels[v]
 }
 
-// ValueOfLevel 字符串转换成 Level, "debug" => DebugLevel
+// ValueOfLevel 字符串转换成 Level, "debug" => LevelDebug
 func ValueOfLevel(vstr string) (v Level, err error) {
 	for i, label := range Labels {
 		if vstr == label {
 			return Level(i), nil
 		}
 	}
-	return InfoLevel, errors.New("level " + vstr + " not exist")
+	return LevelInfo, errors.New("level " + vstr + " not exist")
 }
 
 // MarshalJSON 便于 JSON 解析
