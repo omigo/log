@@ -10,27 +10,27 @@ func execLevelExamples() {
 	log.Infof("IsInfoEnabled? %t", log.IsInfoEnabled())
 
 	// trace 级别
-	log.SetLevel(log.LevelTrace)
+	log.SetLevel(log.Ltrace)
 	log.Tracef(msgFmt, 1)
 
 	// info 级别
-	log.SetLevel(log.LevelInfo)
+	log.SetLevel(log.Linfo)
 	log.Debugf(msgFmt, 2)
 	log.Infof(msgFmt, 2)
 
 	// warn 级别
-	log.SetLevel(log.LevelWarn)
+	log.SetLevel(log.Lwarn)
 	log.Infof(msgFmt, 3)
 	log.Warnf(msgFmt, 3)
 
 	// error 级别
-	log.SetLevel(log.LevelError)
+	log.SetLevel(log.Lerror)
 	log.Warnf(msgFmt, 4)
 	log.Errorf(msgFmt, 4)
 
 	// 恢复默认级别，防止影响其他测试
 	// debug 级别
-	log.SetLevel(log.LevelDebug)
+	log.SetLevel(log.Ldebug)
 	log.Tracef(msgFmt, 5)
 	log.Debugf(msgFmt, 5)
 }

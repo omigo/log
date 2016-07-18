@@ -3,7 +3,7 @@ package main
 import "github.com/gotips/log"
 
 func execColorizedExamples() {
-	log.SetLevel(log.LevelAll)
+	log.SetLevel(log.Lall)
 	log.Info("default config")
 
 	log.Colorized(true)

@@ -147,7 +147,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	r.Message = fmt.Sprintf(format, m...)
 	r.Message = strings.TrimSpace(r.Message)
 
-	if l == LevelStack {
+	if l == Lstack {
 		r.Stack = make([]byte, 1024*1024)
 		n := runtime.Stack(r.Stack, true)
 		r.Stack = r.Stack[:n]
@@ -161,11 +161,11 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	defer func() {
 		s.mu.Unlock()
 
-		if l == LevelPanic {
+		if l == Lpanic {
 			panic(m)
 		}
 
-		if l == LevelFatal {
+		if l == Lfatal {
 			os.Exit(-1)
 		}
 	}()
@@ -173,7 +173,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	s.tpl.Execute(s.out, r)
 	s.out.WriteByte('\n')
 
-	if l == LevelStack {
+	if l == Lstack {
 		s.out.Write(r.Stack)
 	}
 
