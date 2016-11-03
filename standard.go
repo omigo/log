@@ -204,7 +204,7 @@ func parseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern
 
 func calculateColor(l Level) (start, end string) {
 	// all, trace, debug,          info,   warn,   error,  panic,  fatal, print, stack
-	colors := []string{"", "", "", "0;32", "0;34", "0;31", "0;35", "0;35", "", ""}
+	colors := []string{"", "", "", "0;32", "0;33", "0;31", "0;35", "0;35", "", ""}
 	if colors[l] != "" {
 		start = "\033[" + colors[l] + "m"
 		end = "\033[0m"
