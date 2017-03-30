@@ -107,7 +107,7 @@ func JSON(m ...interface{}) {
 	if err != nil {
 		std.Tprintf(Ldebug, "", "%s", err)
 	} else {
-		std.Tprintf(Ldebug, "", "%s", js)
+		std.Tprintf(Ldebug, "", "%s", js[1:len(js)-1])
 	}
 }
 func JSONIndent(m ...interface{}) {
