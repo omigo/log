@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gotips/log"
+	"github.com/arstd/log"
 )
 
 func execCustomPrinterExample() {

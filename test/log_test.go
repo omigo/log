@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gotips/log"
+	"github.com/arstd/log"
 )
 
 func TestDefaultFormatFile(t *testing.T) {
@@ -18,7 +18,7 @@ func TestDefaultFormatFile(t *testing.T) {
 	log.Info(msg)
 	// 2016-07-06 11:54:39 - info test/log_test.go:18 this is a test message
 	if ok, _ := regexp.Match(
-		`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} -? ?info test/log_test.go:\d+ this is a test message`,
+		`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+ -? ?info test/log_test.go:\d+ this is a test message`,
 		buf.Bytes()); !ok {
 		t.Logf("%s", buf.Bytes()) // 2016-01-24 19:41:19 info test/log_test.go:16 this is a test message
 		t.FailNow()
@@ -35,7 +35,7 @@ func TestSetFormatFile(t *testing.T) {
 
 	rand := time.Now().String()
 	log.Debug(rand)
-	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<file>github.com/gotips/log/test/log_test.go</file>")) {
+	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<file>github.com/arstd/log/test/log_test.go</file>")) {
 		t.FailNow()
 	}
 

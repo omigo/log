@@ -1,15 +1,18 @@
 package main
 
-import g "log"
-import "github.com/gotips/log"
+import (
+	g "log"
+
+	"github.com/arstd/log"
+)
 
 func main() {
-	gotipslog() //  大约 16w 行每秒
+	arstdlog() //  大约 16w 行每秒
 
 	// golog() // 大约 36.5w 行每秒
 }
 
-func gotipslog() {
+func arstdlog() {
 	for i := 0; i < 200e4; i++ {
 		log.Print("can't load package: package lib: cannot find package `xxx` in any of")
 	}
