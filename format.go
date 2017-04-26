@@ -20,10 +20,10 @@ const (
 )
 
 // DefaultFormat 默认日志格式
-const DefaultFormat = "2006-01-02 15:04:05 info examples/main.go:88 message"
+const DefaultFormat = "2006-01-02 15:04:05.000 info examples/main.go:88 message"
 
 // DefaultFormatTag 默认日志格式带标签
-const DefaultFormatTag = "2006-01-02 15:04:05 tag info examples/main.go:88 message"
+const DefaultFormatTag = "2006-01-02 15:04:05.000 tag info examples/main.go:88 message"
 
 // ExtactDateTime 抽取日期和时间格式字符串串
 func ExtactDateTime(format string) (dateFmt, timeFmt string) {
