@@ -23,13 +23,13 @@ csv/json/xml，同时支持 Tag（TraceId/RequestId)。
 Usage
 -----
 
-安装：`go get -v -u github.com/gotips/log`
+安装：`go get -v -u github.com/arstd/log`
 
 使用：
 ``` go
 package main
 
-import "github.com/gotips/log"
+import "github.com/arstd/log"
 
 func main() {
     log.Debugf("this is a test message, %d", 1111)

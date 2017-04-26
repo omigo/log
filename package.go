@@ -6,12 +6,12 @@ Package log 实现了一个标准的可以自定义级别的 log 库，就像 sl
 
 
 安装：
-   go get -v -u github.com/gotips/log
+   go get -v -u github.com/arstd/log
 
 使用：
     package main
 
-    import "github.com/gotips/log"
+    import "github.com/arstd/log"
 
     func main() {
         log.Debugf("this is a test message, %d", 1111)

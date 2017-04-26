@@ -13,7 +13,7 @@ func TestCalculatePrefixLen(t *testing.T) {
 		t.FailNow()
 	}
 
-	format = `{"level": "info", "file": "/go/src/github.com/gotips/log/examples/main.go", "line":88, "log": "message"}`
+	format = `{"level": "info", "file": "/go/src/github.com/arstd/log/examples/main.go", "line":88, "log": "message"}`
 	prefixLen = CalculatePrefixLen(format, 1)
 	if prefixLen != 0 {
 		t.FailNow()
@@ -21,7 +21,7 @@ func TestCalculatePrefixLen(t *testing.T) {
 
 	_, file, _, _ := runtime.Caller(0)
 
-	format = `{"level": "info", "file": "github.com/gotips/log/examples/main.go", "line":88, "log": "message"}`
+	format = `{"level": "info", "file": "github.com/arstd/log/examples/main.go", "line":88, "log": "message"}`
 	prefixLen = CalculatePrefixLen(format, 1)
 	if prefixLen != strings.Index(file, "/src/")+5 {
 		t.FailNow()
