@@ -11,8 +11,8 @@ import (
 const (
 	LevelToken   string = "info"
 	TagToken            = "tag"
-	PathToken           = "/go/src/github.com/gotips/log/examples/main.go"
-	PackageToken        = "github.com/gotips/log/examples/main.go"
+	PathToken           = "/go/src/github.com/arstd/log/examples/main.go"
+	PackageToken        = "github.com/arstd/log/examples/main.go"
 	ProjectToken        = "examples/main.go"
 	FileToken           = "main.go"
 	LineToken    int    = 88

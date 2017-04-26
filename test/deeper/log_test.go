@@ -32,7 +32,7 @@ func TestSetFormatFile(t *testing.T) {
 
 	rand := time.Now().String()
 	log.Debug(rand)
-	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<file>github.com/gotips/log/test/deeper/log_test.go</file>")) {
+	if bytes.HasPrefix(buf.Bytes(), ([]byte)("<file>github.com/arstd/log/test/deeper/log_test.go</file>")) {
 		t.FailNow()
 	}
 }
