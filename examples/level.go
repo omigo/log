@@ -1,6 +1,6 @@
 package main
 
-import "github.com/gotips/log"
+import "github.com/arstd/log"
 
 func execLevelExamples() {
 	// 默认日志级别 debug

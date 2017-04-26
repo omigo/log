@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gotips/log"
+	"github.com/arstd/log"
 )
 
 func xTestPrint(t *testing.T) {

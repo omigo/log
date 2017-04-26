@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/gotips/log"
+	"github.com/arstd/log"
 )
 
 func execChangeWriterExample() {
