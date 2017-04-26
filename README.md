@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/gotips/log.svg?branch=develop)](https://travis-ci.org/gotips/log)
-
-log
+log [![Build Status](https://travis-ci.org/arstd/log.svg?branch=master)](https://travis-ci.org/arstd/log)
 ===
 
 Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，能 print/fatal/panic
