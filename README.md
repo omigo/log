@@ -1,23 +1,9 @@
-log [![Build Status](https://travis-ci.org/arstd/log.svg?branch=master)](https://travis-ci.org/arstd/log)
-===
+log [![Build Status](https://travis-ci.org/arstd/log.svg?branch=master)](https://travis-ci.org/arstd/log) [![Godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/arstd/log) [![license](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/arstd/log/master/LICENSE)
+================================================================================
 
-Golang 标准库中提供了基本的 log 模块 http://golang.org/pkg/log ，能 print/fatal/panic
-日志，但唯独不能像 Java log4j 一样设置日志输出级别， debug 日志开发时输出，生产上关闭。这不能
-不说是个巨大的遗憾， gopher 们只能抱怨 Golang 标准库的 log 就是个然并卵，实际项目大多不会使用
-它。尽管 print 可以当成 error 使用（标准库确实把日志打印到错误输出流 os.Stdout），但是开发时
- debug/info 就没办法。
-
-或许对标准库的设计 Golang 开发团队有自己的考虑，但是对应用开发者来说，log4j 已经成为事实上的标
-准。为了向这个标准库靠近，出现了众多第三方 log 库，有在标准库基础上扩展的（也许 Golang 设计者
-们也是想让开发者自己扩展标准库的 log 呢），也有另辟蹊径，也有玩各种花样的。
-
-虽然有那么多的 log 库，但都是大同小异，我们需要的也只是个标准的可以自定义级别的 log 库而已，就
-像 slf4j(Simple Logging Facade for Java) 一样，所以这个 log 库的需要完成得任务就是提供一
-个标准统一的接口，同时也提供了一个基本的实现，可以自己定义模板格式，输出各种类型的日志，如
+`log` 提供一
+个类型 `slf4j` 的标准接口，同时也提供了一个基本的实现，可以自定义日志格式，输出各种类型的日志，如
 csv/json/xml，同时支持 Tag（TraceId/RequestId)。
-
-使用这个 log 库打印日志，可以随时切换日志级别，可以更换不同的 logger 实现，以打印不同格式的日
-志，也可以改变日志输出位置，输出到数据库、消息队列等，者所有的改变都无需修改已经写好的项目源码。
 
 
 Usage
@@ -103,9 +89,3 @@ TODO
 * 测试是否支持各种格式的日期
 * 处理秒和毫秒，如1:1:02.9
 * 实现日志文件按一定规则自动滚动
-
-
-Others
-------
-
-最近更新请移步 https://github.com/arstd/log
