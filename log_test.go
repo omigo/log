@@ -10,12 +10,12 @@ import (
 const uuid = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
 
 func TestLogLevel(t *testing.T) {
-	v := GetLevel()
+	l := GetLevel()
 	SetLevel(Linfo)
 	if IsDebugEnabled() || !IsInfoEnabled() || !IsWarnEnabled() {
 		t.FailNow()
 	}
-	SetLevel(v) // 恢复现场，避免影响其他单元测试
+	SetLevel(l) // 恢复现场，避免影响其他单元测试
 }
 
 func TestSetWriter(t *testing.T) {

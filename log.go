@@ -51,6 +51,16 @@ func Fatal(m ...interface{}) { std.Tprintf(Lfatal, "", "", m...) }
 func Print(m ...interface{}) { std.Tprintf(Lprint, "", "", m...) }
 func Stack(m ...interface{}) { std.Tprintf(Lstack, "", "", m...) }
 
+var nilerr = (error)(nil)
+
+// Errorn check last argument, if error but nil, no print log
+func Errorn(m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lerror, "", "", m...)
+}
+
 // 按一定格式打印日志
 func Tracef(format string, m ...interface{}) { std.Tprintf(Ltrace, "", format, m...) }
 func Debugf(format string, m ...interface{}) { std.Tprintf(Ldebug, "", format, m...) }
@@ -62,6 +72,14 @@ func Fatalf(format string, m ...interface{}) { std.Tprintf(Lfatal, "", format, m
 func Printf(format string, m ...interface{}) { std.Tprintf(Lprint, "", format, m...) }
 func Stackf(format string, m ...interface{}) { std.Tprintf(Lstack, "", format, m...) }
 
+// Errorn check last argument, if error but nil, no print log
+func Errornf(format string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lerror, "", format, m...)
+}
+
 // 打印日志时带上 tag
 func Ttrace(tag string, m ...interface{}) { std.Tprintf(Ltrace, tag, "", m...) }
 func Tdebug(tag string, m ...interface{}) { std.Tprintf(Ldebug, tag, "", m...) }
@@ -72,6 +90,14 @@ func Tpanic(tag string, m ...interface{}) { std.Tprintf(Lpanic, tag, "", m...) }
 func Tfatal(tag string, m ...interface{}) { std.Tprintf(Lfatal, tag, "", m...) }
 func Tprint(tag string, m ...interface{}) { std.Tprintf(Lprint, tag, "", m...) }
 func Tstack(tag string, m ...interface{}) { std.Tprintf(Lstack, tag, "", m...) }
+
+// Errorn check last argument, if error but nil, no print log
+func Terrorn(tag string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lerror, tag, "", m...)
+}
 
 // 按一定格式打印日志，并在打印日志时带上 tag
 func Ttracef(tag string, format string, m ...interface{}) {
@@ -98,6 +124,26 @@ func Tstackf(tag string, format string, m ...interface{}) {
 	std.Tprintf(Lstack, tag, format, m...)
 }
 
+// Errorn check last argument, if error but nil, no print log
+func Terrornf(tag string, format string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lerror, tag, format, m...)
+}
+
+func Json(m ...interface{}) {
+	if v > Ldebug {
+		return
+	}
+	js, err := json.Marshal(m)
+	if err != nil {
+		std.Tprintf(Ldebug, "", "%s", err)
+	} else {
+		std.Tprintf(Ldebug, "", "%s", js[1:len(js)-1])
+	}
+}
+
 // 先转换成 JSON 格式，然后打印
 func JSON(m ...interface{}) {
 	if v > Ldebug {
@@ -110,6 +156,18 @@ func JSON(m ...interface{}) {
 		std.Tprintf(Ldebug, "", "%s", js[1:len(js)-1])
 	}
 }
+func JsonIndent(m ...interface{}) {
+	if v > Ldebug {
+		return
+	}
+	js, err := json.MarshalIndent(m, "", "    ")
+	if err != nil {
+		std.Tprintf(Ldebug, "", "%s", err)
+	} else {
+		std.Tprintf(Ldebug, "", "%s", js)
+	}
+}
+
 func JSONIndent(m ...interface{}) {
 	if v > Ldebug {
 		return

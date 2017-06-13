@@ -109,7 +109,6 @@ func (p *CustomPrinter) SetFormat(format string) {
 	if strings.Contains(format, log.TagToken) {
 		p.tag = true
 	}
-	p.prefixLen = log.CalculatePrefixLen(format, 3)
 	p.line = strings.Contains(format, strconv.Itoa(log.LineToken))
 }
 
