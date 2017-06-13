@@ -1,45 +1,6 @@
 package log
 
-import (
-	"runtime"
-	"strings"
-	"testing"
-)
-
-func TestCalculatePrefixLen(t *testing.T) {
-	format := `{"level": "info", "line": 88, "log": "message"}`
-	prefixLen := CalculatePrefixLen(format, 1)
-	if prefixLen != -1 {
-		t.FailNow()
-	}
-
-	format = `{"level": "info", "file": "/go/src/github.com/arstd/log/examples/main.go", "line":88, "log": "message"}`
-	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != 0 {
-		t.FailNow()
-	}
-
-	_, file, _, _ := runtime.Caller(0)
-
-	format = `{"level": "info", "file": "github.com/arstd/log/examples/main.go", "line":88, "log": "message"}`
-	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != strings.Index(file, "/src/")+5 {
-		t.FailNow()
-	}
-
-	println(file)
-	format = `{"level": "info", "file": "examples/main.go", "line":88, "log": "message"}`
-	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != strings.LastIndex(file, "/")+1 {
-		t.FailNow()
-	}
-
-	format = `{"level": "info", "file": "main.go", "line":88, "log": "message"}`
-	prefixLen = CalculatePrefixLen(format, 1)
-	if prefixLen != strings.LastIndex(file, "/")+1 {
-		t.FailNow()
-	}
-}
+import "testing"
 
 func TestExtactDateTime(t *testing.T) {
 	format := `{"level": "info", "file": "log/main.go", "line":88, "log": "message"}`

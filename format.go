@@ -2,8 +2,6 @@ package log
 
 import (
 	"fmt"
-	"runtime"
-	"strings"
 	"time"
 )
 
@@ -90,57 +88,4 @@ func ExtactDateTime(format string) (dateFmt, timeFmt string) {
 	}
 
 	return dateFmt, timeFmt
-}
-
-// CalculatePrefixLen 计算包前缀，如果格式中不包含包文件路径，那么就返回 -1
-func CalculatePrefixLen(format string, skip int) int {
-	// 格式中不包含文件路径
-	if !strings.Contains(format, "main.go") {
-		return -1
-	}
-
-	_, file, _, _ := runtime.Caller(skip)
-
-	// file with absolute path
-	if strings.Contains(format, PathToken) {
-		return 0
-	}
-
-	// file with package name
-	if strings.Contains(format, PackageToken) {
-		return strings.Index(file, "/src/") + 5
-	}
-
-	// file with project path
-	if strings.Contains(format, ProjectToken) {
-		// remove /<GOPATH>/src/
-		prefixLen := strings.Index(file, "/src/") + 5
-		file = file[prefixLen:]
-
-		// remove github.com/
-		if strings.HasPrefix(file, "github.com/") {
-			prefixLen += 11
-			file = file[11:]
-
-			// remove github user or org name
-			if i := strings.Index(file, "/"); i >= 0 {
-				prefixLen += i + 1
-				file = file[i+1:]
-
-				// remove project name
-				if i := strings.Index(file, "/"); i >= 0 {
-					prefixLen += i + 1
-				}
-			}
-		}
-
-		return prefixLen
-	}
-
-	// file only
-	if strings.Contains(format, FileToken) {
-		return strings.LastIndex(file, "/") + 1
-	}
-
-	return -1
 }

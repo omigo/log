@@ -33,18 +33,14 @@ type Standard struct {
 	pattern   string
 	colorized bool
 
-	tpl       *template.Template
-	prefixLen int
-	dateFmt   string
-	timeFmt   string
+	tpl     *template.Template
+	dateFmt string
+	timeFmt string
 }
 
 // NewStandard 返回标准实现
 func NewStandard(w io.Writer, format string) *Standard {
 	std := &Standard{out: bufio.NewWriter(w), colorized: true}
-
-	// hack 如果用户不调用 SetFormat，直接用，那么也能找到主函数（main，实际是 init 函数）的所在的文件
-	std.prefixLen = -5
 
 	std.SetFormat(format)
 	return std
@@ -83,15 +79,9 @@ func (s *Standard) SetFormat(format string) {
 
 	s.format = format
 
-	skip := 3
-	if s.prefixLen == -5 {
-		skip = 5
-	}
-	s.prefixLen = CalculatePrefixLen(format, skip)
-
 	s.dateFmt, s.timeFmt = ExtactDateTime(format)
 
-	p := parseFormat(format, s.prefixLen, s.dateFmt, s.timeFmt)
+	p := parseFormat(format, s.dateFmt, s.timeFmt)
 
 	s.pattern = p
 	if s.colorized {
@@ -122,14 +112,18 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 		}
 	}
 
-	if s.prefixLen > -1 {
-		var ok bool
-		_, r.File, r.Line, ok = runtime.Caller(2) // expensive
-		if ok && s.prefixLen < len(r.File) {
-			r.File = r.File[s.prefixLen:]
+	var ok bool
+	_, r.File, r.Line, ok = runtime.Caller(2) // expensive
+	if ok {
+		i := strings.LastIndex(r.File, "/vendor/")
+		if i > -1 {
+			r.File = r.File[i+1:]
 		} else {
-			r.File = "???"
+			i := strings.LastIndex(r.File, "/src/")
+			r.File = r.File[i+1:]
 		}
+	} else {
+		r.File = "???"
 	}
 
 	if format == "" {
@@ -181,7 +175,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 }
 
 // 格式解析，把格式串替换成 token 串
-func parseFormat(format string, prefixLen int, dateFmt, timeFmt string) (pattern string) {
+func parseFormat(format string, dateFmt, timeFmt string) (pattern string) {
 	// 顺序最好不要变，从最长的开始匹配
 	pattern = strings.Replace(format, PathToken, "{{ .File }}", -1)
 	pattern = strings.Replace(pattern, PackageToken, "{{ .File }}", -1)

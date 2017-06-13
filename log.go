@@ -51,12 +51,12 @@ func Fatal(m ...interface{}) { std.Tprintf(Lfatal, "", "", m...) }
 func Print(m ...interface{}) { std.Tprintf(Lprint, "", "", m...) }
 func Stack(m ...interface{}) { std.Tprintf(Lstack, "", "", m...) }
 
+var nilerr = (error)(nil)
+
 // Errorn check last argument, if error but nil, no print log
 func Errorn(m ...interface{}) {
-	if err, ok := m[len(m)-1].(error); ok {
-		if err == nil {
-			return
-		}
+	if m[len(m)-1] == nilerr {
+		return
 	}
 	std.Tprintf(Lerror, "", "", m...)
 }
@@ -74,10 +74,8 @@ func Stackf(format string, m ...interface{}) { std.Tprintf(Lstack, "", format, m
 
 // Errorn check last argument, if error but nil, no print log
 func Errornf(format string, m ...interface{}) {
-	if err, ok := m[len(m)-1].(error); ok {
-		if err == nil {
-			return
-		}
+	if m[len(m)-1] == nilerr {
+		return
 	}
 	std.Tprintf(Lerror, "", format, m...)
 }
@@ -95,10 +93,8 @@ func Tstack(tag string, m ...interface{}) { std.Tprintf(Lstack, tag, "", m...) }
 
 // Errorn check last argument, if error but nil, no print log
 func Terrorn(tag string, m ...interface{}) {
-	if err, ok := m[len(m)-1].(error); ok {
-		if err == nil {
-			return
-		}
+	if m[len(m)-1] == nilerr {
+		return
 	}
 	std.Tprintf(Lerror, tag, "", m...)
 }
@@ -130,10 +126,8 @@ func Tstackf(tag string, format string, m ...interface{}) {
 
 // Errorn check last argument, if error but nil, no print log
 func Terrornf(tag string, format string, m ...interface{}) {
-	if err, ok := m[len(m)-1].(error); ok {
-		if err == nil {
-			return
-		}
+	if m[len(m)-1] == nilerr {
+		return
 	}
 	std.Tprintf(Lerror, tag, format, m...)
 }
