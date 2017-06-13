@@ -115,12 +115,15 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	var ok bool
 	_, r.File, r.Line, ok = runtime.Caller(2) // expensive
 	if ok {
-		i := strings.LastIndex(r.File, "/vendor/")
-		if i > -1 {
-			r.File = r.File[i+1:]
-		} else {
-			i := strings.LastIndex(r.File, "/src/")
-			r.File = r.File[i+1:]
+		if i := strings.LastIndex(r.File, "/github.com/"); i > -1 {
+			r.File = r.File[i+12:]
+			if i = strings.Index(r.File, "/"); i > -1 {
+				r.File = r.File[i+1:]
+			}
+		} else if i := strings.LastIndex(r.File, "/vendor/"); i > -1 {
+			r.File = r.File[i+8:]
+		} else if i := strings.LastIndex(r.File, "/src/"); i > -1 {
+			r.File = r.File[i+5:]
 		}
 	} else {
 		r.File = "???"
