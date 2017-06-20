@@ -60,6 +60,12 @@ func Errorn(m ...interface{}) {
 	}
 	std.Tprintf(Lerror, "", "", m...)
 }
+func Fataln(m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lfatal, "", "", m...)
+}
 
 // 按一定格式打印日志
 func Tracef(format string, m ...interface{}) { std.Tprintf(Ltrace, "", format, m...) }
@@ -79,6 +85,12 @@ func Errornf(format string, m ...interface{}) {
 	}
 	std.Tprintf(Lerror, "", format, m...)
 }
+func Fatalnf(format string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lfatal, "", format, m...)
+}
 
 // 打印日志时带上 tag
 func Ttrace(tag string, m ...interface{}) { std.Tprintf(Ltrace, tag, "", m...) }
@@ -97,6 +109,12 @@ func Terrorn(tag string, m ...interface{}) {
 		return
 	}
 	std.Tprintf(Lerror, tag, "", m...)
+}
+func Tfataln(tag string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lfatal, tag, "", m...)
 }
 
 // 按一定格式打印日志，并在打印日志时带上 tag
@@ -130,6 +148,12 @@ func Terrornf(tag string, format string, m ...interface{}) {
 		return
 	}
 	std.Tprintf(Lerror, tag, format, m...)
+}
+func Tfatalnf(tag string, format string, m ...interface{}) {
+	if m[len(m)-1] == nilerr {
+		return
+	}
+	std.Tprintf(Lfatal, tag, format, m...)
 }
 
 func Json(m ...interface{}) {
