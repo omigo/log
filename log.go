@@ -3,6 +3,8 @@ package log
 import (
 	"encoding/json"
 	"io"
+
+	"github.com/arstd/log"
 )
 
 // 默认 debug 级别，方便调试，生产环境可以调用 LevelSet 设置 log 级别
@@ -12,16 +14,22 @@ var v Level = Ldebug
 var std Printer
 
 // SetLevel 设置日志级别
-func SetLevel(l Level) { v = l }
+func SetLevel(l Level) {
+	v = l
+	if v > Ldebug {
+		log.Colorized(false)
+	}
+}
 func SetLevelString(s string) {
 	l, err := ValueOfLevel(s)
 	if err != nil {
 		std.Tprintf(Lerror, "", "level value string %s invalid", s)
+		return
 	}
-	v = l
+	SetLevel(l)
 }
 
-// Colorized 输出日志是否着色，默认不着色
+// Colorized 输出日志是否着色，默认着色，如果设置的级别高于 debug，不着色
 func Colorized(c bool) { std.Colorized(c) }
 
 // GetLevel 返回设置的日志级别
