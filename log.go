@@ -13,6 +13,13 @@ var std Printer
 
 // SetLevel 设置日志级别
 func SetLevel(l Level) { v = l }
+func SetLevelString(s string) {
+	l, err := ValueOfLevel(s)
+	if err != nil {
+		std.Tprintf(Lerror, "", "level value string %s invalid", s)
+	}
+	v = l
+}
 
 // Colorized 输出日志是否着色，默认不着色
 func Colorized(c bool) { std.Colorized(c) }
