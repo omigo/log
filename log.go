@@ -3,8 +3,6 @@ package log
 import (
 	"encoding/json"
 	"io"
-
-	"github.com/arstd/log"
 )
 
 // 默认 debug 级别，方便调试，生产环境可以调用 LevelSet 设置 log 级别
@@ -17,7 +15,7 @@ var std Printer
 func SetLevel(l Level) {
 	v = l
 	if v > Ldebug {
-		log.Colorized(false)
+		Colorized(false)
 	}
 }
 func SetLevelString(s string) {
