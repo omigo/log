@@ -1,11 +1,8 @@
 package main
 
-import "github.com/user/project"
-
 const msgFmt = "this is a test message, %d"
 
 func main() {
-	project.Test()
 
 	// 日志级别示例
 	execLevelExamples()
