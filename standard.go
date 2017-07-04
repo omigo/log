@@ -145,7 +145,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	r.Message = strings.TrimSpace(r.Message)
 
 	if l == Lstack {
-		r.Stack = make([]byte, 1024*1024)
+		r.Stack = make([]byte, 4096)
 		n := runtime.Stack(r.Stack, true)
 		r.Stack = r.Stack[:n]
 	}
