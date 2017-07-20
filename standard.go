@@ -147,7 +147,12 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	if l == Lstack {
 		r.Stack = make([]byte, 4096)
 		n := runtime.Stack(r.Stack, true)
-		r.Stack = r.Stack[:n]
+		if n == 4096 {
+			r.Stack[n-1] = '\n'
+		} else {
+			r.Stack[n] = '\n'
+			r.Stack = r.Stack[:n+1]
+		}
 	}
 
 	if s.colorized {
