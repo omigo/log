@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/arstd/log"
+	"github.com/omigo/log"
 )
 
 func execFormatExamples() {

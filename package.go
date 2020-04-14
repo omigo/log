@@ -5,12 +5,12 @@ log 实现了一个像 slf4j(Simple Logging Facade for Java)
 志，也可以改变日志输出位置，输出到数据库、消息队列等。
 
 安装：
-   go get -v -u github.com/arstd/log
+   go get -v -u github.com/omigo/log
 
 使用：
     package main
 
-    import "github.com/arstd/log"
+    import "github.com/omigo/log"
 
     func main() {
         log.Debugf("this is a test message, %d", 1111)

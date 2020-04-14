@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/arstd/log"
+	"github.com/omigo/log"
 )
 
 func execCustomPrinterExample() {

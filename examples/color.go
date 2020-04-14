@@ -1,6 +1,6 @@
 package main
 
-import "github.com/arstd/log"
+import "github.com/omigo/log"
 
 func execColorizedExamples() {
 	log.SetLevel(log.Lall)
