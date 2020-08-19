@@ -122,3 +122,10 @@ func TestFormatLogWithTag(t *testing.T) {
 	Printf("%d %s", Lprint, Lprint)
 	Stackf("%d %s", Lstack, Lstack)
 }
+
+func TestCost(t *testing.T) {
+	defer Cost("something")()
+
+	time.Sleep(time.Second)
+	Info("do do do")
+}

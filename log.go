@@ -3,6 +3,7 @@ package log
 import (
 	"encoding/json"
 	"io"
+	"time"
 )
 
 // 默认 debug 级别，方便调试，生产环境可以调用 LevelSet 设置 log 级别
@@ -214,5 +215,14 @@ func JSONIndent(m ...interface{}) {
 		std.Tprintf(Ldebug, "", "%s", err)
 	} else {
 		std.Tprintf(Ldebug, "", "%s", js)
+	}
+}
+
+func Cost(something string) func() {
+	std.Tprintf(Linfo, "", "%s start...", something)
+	start := time.Now()
+	return func() {
+		std.Tprintf(Linfo, "", "%s cost %s", something,
+			time.Now().Sub(start).Truncate(time.Second))
 	}
 }

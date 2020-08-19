@@ -41,3 +41,10 @@ func TestSetFormatFile(t *testing.T) {
 
 	log.SetFormat(log.DefaultFormat)
 }
+
+func TestCost(t *testing.T) {
+	defer log.Cost("something")()
+
+	time.Sleep(time.Second)
+	log.Info("do do do")
+}
