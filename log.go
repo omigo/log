@@ -218,11 +218,20 @@ func JSONIndent(m ...interface{}) {
 	}
 }
 
-func Cost(something string) func() {
-	std.Tprintf(Linfo, "", "%s start...", something)
+func Cost(m string) func() {
+	std.Tprintf(Linfo, "", "%s start...", m)
 	start := time.Now()
 	return func() {
-		std.Tprintf(Linfo, "", "%s cost %s", something,
+		std.Tprintf(Linfo, "", "%s cost %s", m,
+			time.Now().Sub(start).Truncate(time.Second))
+	}
+}
+
+func Costf(format, m string) func() {
+	std.Tprintf(Linfo, "", format+" start...", m)
+	start := time.Now()
+	return func() {
+		std.Tprintf(Linfo, "", format+" cost %s", m,
 			time.Now().Sub(start).Truncate(time.Second))
 	}
 }
