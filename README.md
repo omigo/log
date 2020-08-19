@@ -21,30 +21,30 @@ func main() {
     log.Debugf("this is a test message, %d", 1111)
 
 	format := fmt.Sprintf("%s %s %s %s:%d %s", "2006-01-02 15:04:05.000000", log.TagToken,
-		log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+		log.LevelToken, log.FileToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
-		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+		"2006-01-02", "15:04:05.999", log.LevelToken, log.FileToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 	log.Infof("this is a test message, %d", 1111)
 
 	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
-		"2006-01-02", "15:04:05.000", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+		"2006-01-02", "15:04:05.000", log.LevelToken, log.FileToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 1111)
 }
 ```
 日志输出：
 ```
-2016-01-16 20:28:34 debug examples/main.go:10 this is a test message, 1111
-2016-01-16 20:28:34.280601 6ba7b814-9dad-11d1-80b4-00c04fd430c8 info examples/main.go:15 this is a test message, 1111
-{"date": "2016-01-16", "time": "20:28:34.28", "level": "info", "file": "examples/main.go", "line": 20, "log": "this is a test message, 1111"}
-<log><date>2016-01-16</date><time>20:28:34.280</time><level>info</level><file>examples/main.go</file><line>25</line><msg>this is a test message, 1111</msg><log>
+2016-01-16 20:28:34 debug main.go:10 this is a test message, 1111
+2016-01-16 20:28:34.280601 6ba7b814-9dad-11d1-80b4-00c04fd430c8 info main.go:15 this is a test message, 1111
+{"date": "2016-01-16", "time": "20:28:34.28", "level": "info", "file": "main.go", "line": 20, "log": "this is a test message, 1111"}
+<log><date>2016-01-16</date><time>20:28:34.280</time><level>info</level><file>main.go</file><line>25</line><msg>this is a test message, 1111</msg><log>
 ```
 
-更多用法 [examples](examples/main.go)
+更多用法 [examples](main.go)
 着色示例 ![color.png](color.png)
 
 Go Doc and API
