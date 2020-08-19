@@ -22,13 +22,13 @@ func execFormatExamples() {
 
 	// 自定义 json 格式的日志
 	format = fmt.Sprintf(`{"date": "%s", "time": "%s", "level": "%s", "file": "%s", "line": %d, "log": "%s"}`,
-		"2006-01-02", "15:04:05.999", log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+		"2006-01-02", "15:04:05.999", log.LevelToken, log.FileToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 	log.Infof("this is a test message, %d", 9)
 
 	// 自定义 xml 格式的日志
 	format = fmt.Sprintf(`<log><date>%s</date><time>%s</time><tid>%s</tid><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
-		"2006-01-02", "15:04:05.000", log.TagToken, log.LevelToken, log.ProjectToken, log.LineToken, log.MessageToken)
+		"2006-01-02", "15:04:05.000", log.TagToken, log.LevelToken, log.PathToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 	log.Tinfof("6ba7b814-9dad-11d1-80b4-00c04fd430c8", "this is a test message, %d", 10)
 }
