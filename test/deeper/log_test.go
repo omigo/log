@@ -16,15 +16,15 @@ func TestDefaultFormat(t *testing.T) {
 
 	msg := "this is a test message"
 	log.Info(msg)
-	if ok, _ := regexp.Match(`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ -? ?info .*test/deeper/log_test.go:\d+ this is a test message`, buf.Bytes()); !ok {
-		t.Logf("%s", buf.Bytes()) // 2016-01-24 19:41:19 info test/deeper/log_test.go:16 this is a test message
+	if ok, _ := regexp.Match(`\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} info log_test.go:\d+ this is a test message`, buf.Bytes()); !ok {
+		t.Logf("%s", buf.Bytes()) // 2016-01-24 19:41:19 info log_test.go:16 this is a test message
 		t.FailNow()
 	}
 }
 
 func TestSetFormatFile(t *testing.T) {
 	format := fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
-		"2006-01-02", "15:04:05.000", log.LevelToken, log.PackageToken, log.LineToken, log.MessageToken)
+		"2006-01-02", "15:04:05.000", log.LevelToken, log.PathToken, log.LineToken, log.MessageToken)
 	log.SetFormat(format)
 
 	buf := bytes.NewBuffer(make([]byte, 4096))

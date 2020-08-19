@@ -31,7 +31,7 @@ func TestSetWriter(t *testing.T) {
 
 func TestSetFormat(t *testing.T) {
 	format := fmt.Sprintf(`<log><date>%s</date><time>%s</time><level>%s</level><file>%s</file><line>%d</line><msg>%s</msg><log>`,
-		"2006-01-02", "15:04:05.000", LevelToken, ProjectToken, LineToken, MessageToken)
+		"2006-01-02", "15:04:05.000", LevelToken, PathToken, LineToken, MessageToken)
 	SetFormat(format)
 
 	buf := bytes.NewBuffer(make([]byte, 4096))

@@ -18,6 +18,7 @@ type record struct {
 	Date, Time string
 	Tag        string
 	Level      string
+	Path       string
 	File       string
 	Line       int
 	Message    string
@@ -113,17 +114,12 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	}
 
 	var ok bool
-	_, r.File, r.Line, ok = runtime.Caller(2) // expensive
+	_, r.Path, r.Line, ok = runtime.Caller(2) // expensive
 	if ok {
-		if i := strings.LastIndex(r.File, "/github.com/"); i > -1 {
-			r.File = r.File[i+12:]
-			if i = strings.Index(r.File, "/"); i > -1 {
-				r.File = r.File[i+1:]
-			}
-		} else if i := strings.LastIndex(r.File, "/vendor/"); i > -1 {
-			r.File = r.File[i+8:]
-		} else if i := strings.LastIndex(r.File, "/src/"); i > -1 {
-			r.File = r.File[i+5:]
+		if i := strings.LastIndexByte(r.Path, '/'); i > -1 {
+			r.File = r.Path[i+1:]
+		} else {
+			r.File = r.Path
 		}
 	} else {
 		r.File = "???"
@@ -185,9 +181,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 // 格式解析，把格式串替换成 token 串
 func parseFormat(format string, dateFmt, timeFmt string) (pattern string) {
 	// 顺序最好不要变，从最长的开始匹配
-	pattern = strings.Replace(format, PathToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, PackageToken, "{{ .File }}", -1)
-	pattern = strings.Replace(pattern, ProjectToken, "{{ .File }}", -1)
+	pattern = strings.Replace(format, PathToken, "{{ .Path }}", -1)
 	pattern = strings.Replace(pattern, FileToken, "{{ .File }}", -1)
 	pattern = strings.Replace(pattern, TagToken, "{{ .Tag }}", -1)
 	pattern = strings.Replace(pattern, LevelToken, "{{ .Level }}", -1)

@@ -7,7 +7,7 @@ import (
 
 func init() {
 	// 默认实现标准格式标准输出
-	SetPrinter(NewStandard(os.Stdout, DefaultFormatTag))
+	SetPrinter(NewStandard(os.Stdout, DefaultFormat))
 }
 
 // Printer 定义了打印接口
