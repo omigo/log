@@ -124,7 +124,30 @@ func TestFormatLogWithTag(t *testing.T) {
 }
 
 func TestCost(t *testing.T) {
-	defer Cost("something")()
+	defer Cost(666, "migo")()
+
+	time.Sleep(time.Second)
+	Info("do do do")
+}
+
+func TestCostf(t *testing.T) {
+	defer Costf("id=%d&name=%s", 666, "migo")()
+
+	time.Sleep(time.Second)
+	Info("do do do")
+}
+
+func TestTcost(t *testing.T) {
+	SetFormat(DefaultFormatTag)
+	defer Tcost("1001", 666, "migo")()
+
+	time.Sleep(time.Second)
+	Info("do do do")
+}
+
+func TestTcostf(t *testing.T) {
+	SetFormat(DefaultFormatTag)
+	defer Tcostf("1001", "id=%d&name=%s", 666, "migo")()
 
 	time.Sleep(time.Second)
 	Info("do do do")
