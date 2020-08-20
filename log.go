@@ -218,20 +218,38 @@ func JSONIndent(m ...interface{}) {
 	}
 }
 
-func Cost(m string) func() {
-	std.Tprintf(Linfo, "", "%s start...", m)
+func Cost(m ...interface{}) func() {
+	std.Tprintf(Linfo, "", "%v start...", m)
 	start := time.Now()
 	return func() {
-		std.Tprintf(Linfo, "", "%s cost %s", m,
-			time.Now().Sub(start).Truncate(time.Second))
+		std.Tprintf(Linfo, "", "%v cost "+
+			time.Now().Sub(start).Truncate(time.Second).String(), m)
 	}
 }
 
-func Costf(format, m string) func() {
-	std.Tprintf(Linfo, "", format+" start...", m)
+func Costf(format string, m ...interface{}) func() {
+	std.Tprintf(Linfo, "", format+" start...", m...)
 	start := time.Now()
 	return func() {
-		std.Tprintf(Linfo, "", format+" cost %s", m,
-			time.Now().Sub(start).Truncate(time.Second))
+		std.Tprintf(Linfo, "", format+" cost "+
+			time.Now().Sub(start).Truncate(time.Second).String(), m...)
+	}
+}
+
+func Tcost(tag string, m ...interface{}) func() {
+	std.Tprintf(Linfo, tag, "%v start...", m)
+	start := time.Now()
+	return func() {
+		std.Tprintf(Linfo, tag, "%v cost "+
+			time.Now().Sub(start).Truncate(time.Second).String(), m)
+	}
+}
+
+func Tcostf(tag string, format string, m ...interface{}) func() {
+	std.Tprintf(Linfo, tag, format+" start...", m...)
+	start := time.Now()
+	return func() {
+		std.Tprintf(Linfo, tag, format+" cost "+
+			time.Now().Sub(start).Truncate(time.Second).String(), m...)
 	}
 }
