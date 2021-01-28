@@ -32,3 +32,4 @@ _testmain.go
 
 # ignore compatible code
 #other*
+.idea
