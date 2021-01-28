@@ -12,7 +12,7 @@ func NewMyLogger() *MyLogger {
 	return &MyLogger{}
 }
 
-func (m *MyLogger) SetOutput(output io.Writer)  {}                         // 设置输出
+func (m *MyLogger) SetOutput(output io.Writer)  {panic("unimplemented")}                         // 设置输出
 func (m *MyLogger)  GetOutput() io.Writer    {panic("unimplemented")}                             // 获取输出
 func (m *MyLogger)  SetLevel(level qlog.Level)     {}                              // 设置log等级
 func (m *MyLogger)  GetLevel() qlog.Level       {panic("unimplemented")}                                 // 获取log等级
@@ -34,6 +34,6 @@ func (m *MyLogger)  Fatal(args ...interface{}) {Fatal(args...)}   // 记录 Fata
 func (m *MyLogger)  Fatalf(format string, args ...interface{}) {Fatalf(format, args...)}   // 格式化并记录 FatalLevel 级别的日志
 func (m *MyLogger)  Panic(args ...interface{}) {Panic(args...)}   // 记录 PanicLevel 级别的日志
 func (m *MyLogger)  Panicf(format string, args ...interface{}) {Panicf(format, args...)}   // 格式化并记录 PanicLevel 级别的日志
-func (m *MyLogger)  WithField(key string, value interface{}) qlog.Logger {panic("unimplemented")}   // 为日志添加一个上下文数据
-func (m *MyLogger)  WithFields(fields qlog.Fields) qlog.Logger {panic("unimplemented")}   // 为日志添加多个上下文数据
-func (m *MyLogger)  WithError(err error) qlog.Logger {panic("unimplemented")}   // 为日志添加标准错误上下文数据
+func (m *MyLogger)  WithField(key string, value interface{}) qlog.Logger {return m}   // 为日志添加一个上下文数据
+func (m *MyLogger)  WithFields(fields qlog.Fields) qlog.Logger {return m}   // 为日志添加多个上下文数据
+func (m *MyLogger)  WithError(err error) qlog.Logger {return m}   // 为日志添加标准错误上下文数据
