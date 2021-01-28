@@ -18,22 +18,29 @@ func (m *MyLogger)  SetLevel(level qlog.Level)     {}                           
 func (m *MyLogger)  GetLevel() qlog.Level       {panic("unimplemented")}                                 // 获取log等级
 func (m *MyLogger)  Log(level qlog.Level, args ...interface{})     {panic("unimplemented")}              // 记录对应级别的日志
 func (m *MyLogger)  Logf(level qlog.Level, format string, args ...interface{})  {panic("unimplemented")} // 记录对应级别的日志
-func (m *MyLogger)  Trace(args ...interface{}) {Trace(args...)}   // 记录 TraceLevel 级别的日志
-func (m *MyLogger)  Tracef(format string, args ...interface{}) {Tracef(format, args...)}   // 格式化并记录 TraceLevel 级别的日志
-func (m *MyLogger)  Debug(args ...interface{}) {Debug(args...)}   // 记录 DebugLevel 级别的日志
-func (m *MyLogger)  Debugf(format string, args ...interface{}) {Debugf(format, args...)}   // 格式化并记录 DebugLevel 级别的日志
-func (m *MyLogger)  Info(args ...interface{}) {Info(args...)}   // 记录 InfoLevel 级别的日志
-func (m *MyLogger)  Infof(format string, args ...interface{}) {Infof(format, args...)}   // 格式化并记录 InfoLevel 级别的日志
-func (m *MyLogger)  Print(args ...interface{}) {Print(args...)}   // 记录 InfoLevel 级别的日志[gorm logger扩展]
-func (m *MyLogger)  Printf(format string, args ...interface{}) {Printf(format, args...)}   // 格式化并记录 InfoLevel 级别的日志[gorm logger扩展]
-func (m *MyLogger)  Warn(args ...interface{}) {Warn(args...)}   // 记录 WarnLevel 级别的日志
-func (m *MyLogger)  Warnf(format string, args ...interface{}) {Warnf(format, args...)}   // 格式化并记录 WarnLevel 级别的日志
-func (m *MyLogger)  Error(args ...interface{}) {Error(args...)}   // 记录 ErrorLevel 级别的日志
-func (m *MyLogger)  Errorf(format string, args ...interface{}) {Errorf(format, args...)}   // 格式化并记录 ErrorLevel 级别的日志
-func (m *MyLogger)  Fatal(args ...interface{}) {Fatal(args...)}   // 记录 FatalLevel 级别的日志
-func (m *MyLogger)  Fatalf(format string, args ...interface{}) {Fatalf(format, args...)}   // 格式化并记录 FatalLevel 级别的日志
-func (m *MyLogger)  Panic(args ...interface{}) {Panic(args...)}   // 记录 PanicLevel 级别的日志
-func (m *MyLogger)  Panicf(format string, args ...interface{}) {Panicf(format, args...)}   // 格式化并记录 PanicLevel 级别的日志
 func (m *MyLogger)  WithField(key string, value interface{}) qlog.Logger {return m}   // 为日志添加一个上下文数据
 func (m *MyLogger)  WithFields(fields qlog.Fields) qlog.Logger {return m}   // 为日志添加多个上下文数据
 func (m *MyLogger)  WithError(err error) qlog.Logger {return m}   // 为日志添加标准错误上下文数据
+
+
+// 打印日志
+func (*MyLogger) Trace(m ...interface{}) { std.Tprintf(Ltrace, "", "", m...) }
+func (*MyLogger) Debug(m ...interface{}) { std.Tprintf(Ldebug, "", "", m...) }
+func (*MyLogger) Info(m ...interface{})  { std.Tprintf(Linfo, "", "", m...) }
+func (*MyLogger) Warn(m ...interface{})  { std.Tprintf(Lwarn, "", "", m...) }
+func (*MyLogger) Error(m ...interface{}) { std.Tprintf(Lerror, "", "", m...) }
+func (*MyLogger) Panic(m ...interface{}) { std.Tprintf(Lpanic, "", "", m...) }
+func (*MyLogger) Fatal(m ...interface{}) { std.Tprintf(Lfatal, "", "", m...) }
+func (*MyLogger) Print(m ...interface{}) { std.Tprintf(Lprint, "", "", m...) }
+func (*MyLogger) Stack(m ...interface{}) { std.Tprintf(Lstack, "", "", m...) }
+
+// 按一定格式打印日志
+func (*MyLogger) Tracef(format string, m ...interface{}) { std.Tprintf(Ltrace, "", format, m...) }
+func (*MyLogger) Debugf(format string, m ...interface{}) { std.Tprintf(Ldebug, "", format, m...) }
+func (*MyLogger) Infof(format string, m ...interface{})  { std.Tprintf(Linfo, "", format, m...) }
+func (*MyLogger) Warnf(format string, m ...interface{})  { std.Tprintf(Lwarn, "", format, m...) }
+func (*MyLogger) Errorf(format string, m ...interface{}) { std.Tprintf(Lerror, "", format, m...) }
+func (*MyLogger) Panicf(format string, m ...interface{}) { std.Tprintf(Lpanic, "", format, m...) }
+func (*MyLogger) Fatalf(format string, m ...interface{}) { std.Tprintf(Lfatal, "", format, m...) }
+func (*MyLogger) Printf(format string, m ...interface{}) { std.Tprintf(Lprint, "", format, m...) }
+func (*MyLogger) Stackf(format string, m ...interface{}) { std.Tprintf(Lstack, "", format, m...) }
