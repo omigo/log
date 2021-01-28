@@ -118,7 +118,7 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	if ok {
 		if i := strings.LastIndexByte(r.Path, '/'); i > -1 {
 			r.File = r.Path[i+1:]
-			if strings.HasPrefix(r.File, "qlog.go:") {
+			if strings.Contains(r.File, "qlog.go") {
 				_, r.Path, r.Line, ok = runtime.Caller(3) // expensive
 				if ok {
 					if i := strings.LastIndexByte(r.Path, '/'); i > -1 {
