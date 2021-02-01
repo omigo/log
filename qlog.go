@@ -1,10 +1,25 @@
 package log
 
-
 import (
 	"io"
+
+	"git.qutoutiao.net/gopher/qms/pkg/qlog"
+	//_ "unsafe"
+	dlog "git.qutoutiao.net/pedestal/discovery/logger"
 )
-import "git.qutoutiao.net/gopher/qms/pkg/qlog"
+
+// 替换 Logrus，打印日志更简单，看起来清晰一些
+
+////go:linkname m git.qutoutiao.net/gopher/qms/pkg/qlog.logger
+//var logger qlog.Logger = log.NewMyLogger()
+//
+////go:linkname n git.qutoutiao.net/pedestal/discovery/logger.globalLogger
+//var logger2 dlog.Interface = log.NewMyLogger()
+
+func init() {
+	qlog.SetLogger(NewMyLogger())
+	dlog.SetLogger(NewMyLogger())
+}
 
 type MyLogger struct{}
 
@@ -12,16 +27,15 @@ func NewMyLogger() *MyLogger {
 	return &MyLogger{}
 }
 
-func (m *MyLogger) SetOutput(output io.Writer)  {panic("unimplemented")}                         // 设置输出
-func (m *MyLogger)  GetOutput() io.Writer    {panic("unimplemented")}                             // 获取输出
-func (m *MyLogger)  SetLevel(level qlog.Level)     {}                              // 设置log等级
-func (m *MyLogger)  GetLevel() qlog.Level       {panic("unimplemented")}                                 // 获取log等级
-func (m *MyLogger)  Log(level qlog.Level, args ...interface{})     {panic("unimplemented")}              // 记录对应级别的日志
-func (m *MyLogger)  Logf(level qlog.Level, format string, args ...interface{})  {panic("unimplemented")} // 记录对应级别的日志
-func (m *MyLogger)  WithField(key string, value interface{}) qlog.Logger {return m}   // 为日志添加一个上下文数据
-func (m *MyLogger)  WithFields(fields qlog.Fields) qlog.Logger {return m}   // 为日志添加多个上下文数据
-func (m *MyLogger)  WithError(err error) qlog.Logger {return m}   // 为日志添加标准错误上下文数据
-
+func (m *MyLogger) SetOutput(output io.Writer)                                { panic("unimplemented") } // 设置输出
+func (m *MyLogger) GetOutput() io.Writer                                      { panic("unimplemented") } // 获取输出
+func (m *MyLogger) SetLevel(level qlog.Level)                                 {}                         // 设置log等级
+func (m *MyLogger) GetLevel() qlog.Level                                      { panic("unimplemented") } // 获取log等级
+func (m *MyLogger) Log(level qlog.Level, args ...interface{})                 { panic("unimplemented") } // 记录对应级别的日志
+func (m *MyLogger) Logf(level qlog.Level, format string, args ...interface{}) { panic("unimplemented") } // 记录对应级别的日志
+func (m *MyLogger) WithField(key string, value interface{}) qlog.Logger       { return m }               // 为日志添加一个上下文数据
+func (m *MyLogger) WithFields(fields qlog.Fields) qlog.Logger                 { return m }               // 为日志添加多个上下文数据
+func (m *MyLogger) WithError(err error) qlog.Logger                           { return m }               // 为日志添加标准错误上下文数据
 
 // 打印日志
 func (*MyLogger) Trace(m ...interface{}) { std.Tprintf(Ltrace, "", "", m...) }
