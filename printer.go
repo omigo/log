@@ -5,9 +5,12 @@ import (
 	"os"
 )
 
+
+var Std = NewStandard(os.Stdout, DefaultFormat)
+
 func init() {
 	// 默认实现标准格式标准输出
-	SetPrinter(NewStandard(os.Stdout, DefaultFormat))
+	SetPrinter(Std)
 }
 
 // Printer 定义了打印接口

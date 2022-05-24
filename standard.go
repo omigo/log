@@ -118,6 +118,9 @@ func (s *Standard) Tprintf(l Level, tag string, format string, m ...interface{})
 	if ok {
 		if i := strings.LastIndexByte(r.Path, '/'); i > -1 {
 			r.File = r.Path[i+1:]
+			if j := strings.LastIndexByte(r.Path[:i], '/'); j > -1 {
+				r.File = r.Path[j+1:]
+			}
 		} else {
 			r.File = r.Path
 		}
